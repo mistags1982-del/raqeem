@@ -1,54 +1,155 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>رُقيم | مجلة شعرية عربية</title>
-<meta name="description" content="رُقيم، مجلة شعرية عربية للفصيح والشعبي.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="رقيم، مساحة للنصوص الشعرية الفصيحة والشعبية"
+  >
+
+  <title>رقيم</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<header>
-  <div class="wrap nav">
-    <a class="logo" href="index.html">رُقيم</a>
-    <nav><a href="#poems">القصائد</a><a href="#about">من نحن</a><a href="#contact">تواصل</a></nav>
-  </div>
-</header>
 
-<main>
-<section class="hero wrap">
-  <span>مجلة شعرية عربية</span>
-  <h1>الكلمة،<br>كما ينبغي أن تُقرأ.</h1>
-  <p>مساحة هادئة للشعر الفصيح والشعبي، وللنصوص التي تستحق أن تبقى.</p>
-  <a class="button" href="#poems">اقرأ القصائد</a>
-</section>
+  <header class="header">
 
-<section class="wrap section" id="poems">
-  <div class="section-head"><h2>أحدث القصائد</h2><div class="filters">
-    <button class="active" data-filter="all">الكل</button>
-    <button data-filter="فصيح">الفصيح</button>
-    <button data-filter="شعبي">الشعبي</button>
-  </div></div>
-  <div class="grid" id="poemGrid"></div>
-</section>
+    <div class="header-inner">
 
-<section class="about" id="about"><div class="wrap narrow">
-  <span>من نحن</span><h2>مجلة رُقيم</h2>
-  <p>الشعرُ هو لغةُ الروح حين تعجزُ الحروفُ العاديةُ عن وصفِ الشعور. وُلدت رُقيم لتكون مساحة لكل ذائقة تبحث عن جمال الفصيح وصدق الشعبي.</p>
-  <p>هنا لا ننشر نصوصاً فحسب، بل نحتفي بالكلمة التي تلامس الوجدان، ونقدّم القصيدة في حلة بصرية تليق بوقار الشعر.</p>
-</div></section>
+      <a href="index.html" class="logo">
+        رقيم
+      </a>
 
-<section class="wrap section contact" id="contact">
-  <span>تواصل معنا</span><h2>أبواب رُقيم مفتوحة للكلمة.</h2>
-  <div class="contact-links">
-    <a href="https://t.me/raqeemm" target="_blank" rel="noopener"><b>قناة رُقيم</b><small>@raqeemm</small></a>
-    <a href="https://t.me/ThewriterMustafa" target="_blank" rel="noopener"><b>تيليجرام</b><small>@ThewriterMustafa</small></a>
-    <a href="mailto:fdm42143@gmail.com"><b>البريد الإلكتروني</b><small>fdm42143@gmail.com</small></a>
-  </div>
-</section>
-</main>
-<footer><div class="wrap"><strong>رُقيم</strong><p>مجلة شعرية عربية</p></div></footer>
-<script src="poems.js"></script><script src="script.js"></script>
-</body></html>
+      <nav class="nav">
+        <a href="#texts">النصوص</a>
+        <a href="#about">من نحن</a>
+        <a href="#contact">تواصل معنا</a>
+      </nav>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <h1>رقيم</h1>
+
+      <p>
+        مساحة هادئة للكلمة والشعر
+      </p>
+
+    </section>
+
+
+    <section class="texts" id="texts">
+
+      <div class="section-head">
+
+        <h2>النصوص</h2>
+
+        <div class="filters">
+
+          <button
+            class="filter active"
+            data-type="all"
+          >
+            الكل
+          </button>
+
+          <button
+            class="filter"
+            data-type="fusha"
+          >
+            فصيح
+          </button>
+
+          <button
+            class="filter"
+            data-type="shaabi"
+          >
+            شعبي
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div id="poemGrid" class="poem-grid">
+
+        <p class="loading">
+          جارٍ تحميل النصوص...
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <section class="simple-section" id="about">
+
+      <h2>من نحن</h2>
+
+      <p>
+        رقيم مساحة أدبية تهتم بالنصوص الشعرية
+        الفصيحة والشعبية، وتمنح الكلمة مكانًا
+        بسيطًا وهادئًا للقراءة.
+      </p>
+
+    </section>
+
+
+    <section class="simple-section" id="contact">
+
+      <h2>تواصل معنا</h2>
+
+      <p>
+        للتواصل والمقترحات والمشاركة الأدبية.
+      </p>
+
+      <a
+        class="contact-link"
+        href="mailto:fdm42143@gmail.com"
+      >
+        البريد الإلكتروني
+      </a>
+
+    </section>
+
+  </main>
+
+
+  <footer class="footer">
+
+    <p>
+      رقيم © 2026
+    </p>
+
+  </footer>
+
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
