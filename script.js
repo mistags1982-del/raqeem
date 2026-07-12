@@ -24,8 +24,87 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
   const db = getFirestore(app);
 
   const grid = document.getElementById("poemGrid");
+  const filterButtons = document.querySelectorAll(".filter");
 
-  grid.innerHTML = "<p>جارٍ تحميل النصوص...</p>";
+  let posts = [];
+  let currentType = "all";
+
+  function escapeHTML(value = "") {
+    const div = document.createElement("div");
+    div.textContent = value;
+    return div.innerHTML;
+  }
+
+  function renderPosts() {
+
+    grid.innerHTML = "";
+
+    const filteredPosts = currentType === "all"
+      ? posts
+      : posts.filter(post => post.type === currentType);
+
+    if (filteredPosts.length === 0) {
+      grid.innerHTML = "<p>لا توجد نصوص في هذا القسم.</p>";
+      return;
+    }
+
+    filteredPosts.forEach(post => {
+
+      const article = document.createElement("article");
+
+      article.className = "card";
+
+      const content = post.content || "";
+
+      const excerpt = content.length > 150
+        ? content.substring(0, 150) + "..."
+        : content;
+
+      article.innerHTML = `
+        <div class="card-body">
+
+          <small>
+            ${escapeHTML(post.author || "رقيم")}
+          </small>
+
+          <h3>
+            ${escapeHTML(post.title || "بلا عنوان")}
+          </h3>
+
+          <p>
+            ${escapeHTML(excerpt)}
+          </p>
+
+          <a href="post.html?id=${post.id}">
+            قراءة النص ←
+          </a>
+
+        </div>
+      `;
+
+      grid.appendChild(article);
+
+    });
+
+  }
+
+  filterButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      filterButtons.forEach(btn => {
+        btn.classList.remove("active");
+      });
+
+      button.classList.add("active");
+
+      currentType = button.dataset.type;
+
+      renderPosts();
+
+    });
+
+  });
 
   try {
 
@@ -36,52 +115,18 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
 
     const snapshot = await getDocs(postsQuery);
 
-    grid.innerHTML = "";
+    posts = snapshot.docs.map(documentSnapshot => ({
+      id: documentSnapshot.id,
+      ...documentSnapshot.data()
+    }));
 
-    if (snapshot.empty) {
-      grid.innerHTML = "<p>لا توجد نصوص منشورة بعد.</p>";
-      return;
-    }
-
-    snapshot.forEach((documentSnapshot) => {
-
-      const post = documentSnapshot.data();
-
-      const article = document.createElement("article");
-
-      article.className = "card";
-
-      const content = post.content || "";
-
-      const excerpt =
-        content.length > 150
-        ? content.substring(0, 150) + "..."
-        : content;
-
-      article.innerHTML = `
-        <div class="card-body">
-          <small>${post.author || "رقيم"}</small>
-
-          <h3>${post.title || "بلا عنوان"}</h3>
-
-          <p>${excerpt}</p>
-
-          <a href="post.html?id=${documentSnapshot.id}">
-            قراءة النص ←
-          </a>
-        </div>
-      `;
-
-      grid.appendChild(article);
-
-    });
+    renderPosts();
 
   } catch (error) {
 
     console.error(error);
 
-    grid.innerHTML =
-      "<p>تعذر تحميل النصوص.</p>";
+    grid.innerHTML = "<p>تعذر تحميل النصوص.</p>";
 
   }
 
