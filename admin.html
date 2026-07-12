@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>لوحة إدارة رقيم</title>
+<title>إدارة رقيم</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 
@@ -43,15 +43,13 @@ color:#777;
 
 .card{
 background:#fff;
-border:1px solid #eee;
 border-radius:20px;
 padding:25px;
 margin-bottom:20px;
+border:1px solid #eee;
 }
 
-input,
-textarea,
-select{
+input,textarea,select{
 width:100%;
 padding:14px;
 margin-bottom:15px;
@@ -62,12 +60,13 @@ font-size:16px;
 }
 
 textarea{
-min-height:260px;
+min-height:220px;
 line-height:2;
 }
 
 button{
-padding:13px 20px;
+width:100%;
+padding:14px;
 border:0;
 border-radius:12px;
 background:#111;
@@ -76,8 +75,8 @@ font-family:inherit;
 cursor:pointer;
 }
 
-.full{
-width:100%;
+.small-btn{
+width:auto;
 }
 
 .gray{
@@ -105,23 +104,20 @@ align-items:center;
 
 .tabs{
 display:flex;
-gap:10px;
+gap:8px;
+flex-wrap:wrap;
 margin-top:20px;
 }
 
 .tabs button{
 flex:1;
-}
-
-.active{
-background:#111;
-color:white;
+min-width:120px;
 }
 
 .item{
 border:1px solid #eee;
-border-radius:15px;
 padding:18px;
+border-radius:15px;
 margin-top:12px;
 }
 
@@ -142,40 +138,27 @@ color:#777;
 
 <body>
 
-
 <div class="container">
 
-
 <div class="brand">
-
 <h1>رقيم</h1>
-
 <p>لوحة إدارة المحتوى</p>
-
 </div>
-
 
 
 <div id="loginBox" class="card">
 
-
 <input id="email" type="email" placeholder="البريد الإلكتروني">
-
 
 <input id="password" type="password" placeholder="كلمة المرور">
 
-
-<button id="loginBtn" class="full">
+<button id="loginBtn">
 دخول
 </button>
 
-
 <p id="loginMessage" class="message"></p>
 
-
 </div>
-
-
 
 
 
@@ -186,55 +169,53 @@ color:#777;
 
 <div class="top">
 
-<strong>
-إدارة رقيم
-</strong>
+<b>إدارة رقيم</b>
 
-
-<button id="logoutBtn" class="gray">
+<button id="logoutBtn" class="gray small-btn">
 خروج
 </button>
-
 
 </div>
 
 
 <div class="tabs">
 
-<button id="showPublish" class="active">
-نشر
+<button id="showPublish">
+نشر قصيدة
 </button>
 
 <button id="showPosts">
-النصوص
+القصائد
+</button>
+
+<button id="showPoets">
+الشعراء
 </button>
 
 <button id="showSettings">
 الإعدادات
 </button>
 
-
 </div>
 
-
 </div>
-
-
 
 
 
 <div id="publishBox" class="card">
 
-
-<h2>
-نشر قصيدة
-</h2>
-
+<h2>نشر قصيدة</h2>
 
 <input id="title" placeholder="عنوان القصيدة">
 
 
-<input id="author" placeholder="اسم الكاتب">
+<select id="poetSelect">
+
+<option value="">
+اختر الشاعر
+</option>
+
+</select>
 
 
 <select id="type">
@@ -247,20 +228,18 @@ color:#777;
 شعبي
 </option>
 
-
 </select>
 
 
 <textarea id="content" placeholder="اكتب القصيدة"></textarea>
 
 
-<button id="publishBtn" class="full">
+<button id="publishBtn">
 نشر
 </button>
 
 
 <p id="publishMessage" class="message"></p>
-
 
 </div>
 
@@ -268,53 +247,61 @@ color:#777;
 
 <div id="postsBox" class="card hidden">
 
-<h2>
-النصوص المنشورة
-</h2>
-
+<h2>القصائد</h2>
 
 <div id="postsList"></div>
 
-
 </div>
 
 
+<div id="poetsBox" class="card hidden">
 
-<div id="settingsBox" class="card hidden">
+<h2>الشعراء</h2>
 
+<input id="poetName" placeholder="اسم الشاعر">
 
-<h2>
-إعدادات الموقع
-</h2>
+<textarea id="poetBio" placeholder="نبذة عن حياة الشاعر"></textarea>
 
-
-<input id="siteName" placeholder="اسم الموقع">
-
-
-<input id="siteDesc" placeholder="وصف الموقع">
+<input id="poetStyle" placeholder="الأسلوب الشعري">
 
 
-<input id="channelLink" placeholder="رابط القناة">
-
-
-<input id="contactEmail" placeholder="البريد">
-
-
-<button id="saveSettings" class="full">
-حفظ الإعدادات
+<button id="addPoetBtn">
+إضافة شاعر
 </button>
 
 
+<p id="poetMessage" class="message"></p>
+
+
+<div id="poetsList"></div>
+
+</div>
+<div id="settingsBox" class="card hidden">
+
+<h2>الإعدادات</h2>
+
+<input id="siteName" placeholder="اسم الموقع">
+
+<input id="siteDesc" placeholder="وصف الموقع">
+
+<input id="channelLink" placeholder="رابط القناة">
+
+<input id="contactEmail" placeholder="البريد">
+
+<button id="saveSettings">
+حفظ الإعدادات
+</button>
+
 <p id="settingsMessage" class="message"></p>
 
-
 </div>
 
 
 </div>
 
-
 </div>
+
+
 <script type="module">
 
 import { initializeApp }
@@ -322,20 +309,15 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
 
 import {
-
 getAuth,
 signInWithEmailAndPassword,
 signOut,
 onAuthStateChanged
-
 }
-
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
 
-
 import {
-
 getFirestore,
 collection,
 addDoc,
@@ -346,9 +328,7 @@ doc,
 setDoc,
 getDoc,
 serverTimestamp
-
 }
-
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
@@ -378,37 +358,43 @@ const auth=getAuth(app);
 const db=getFirestore(app);
 
 
-
 const ADMIN_EMAIL="fdm42143@gmail.com";
 
 
+// العناصر
+
+const loginBtn=document.getElementById("loginBtn");
+const loginMessage=document.getElementById("loginMessage");
+
+const emailInput=document.getElementById("email");
+const passwordInput=document.getElementById("password");
 
 const loginBox=document.getElementById("loginBox");
-
 const adminBox=document.getElementById("adminBox");
 
+const logoutBtn=document.getElementById("logoutBtn");
 
 
+
+// تسجيل الدخول
 
 loginBtn.onclick=async()=>{
 
 try{
 
 await signInWithEmailAndPassword(
-
 auth,
-
-email.value.trim(),
-
-password.value
-
+emailInput.value.trim(),
+passwordInput.value
 );
 
 }
 
-catch(e){
+catch(error){
 
-loginMessage.textContent="خطأ في تسجيل الدخول";
+console.log(error);
+
+loginMessage.textContent=error.message;
 
 }
 
@@ -416,6 +402,7 @@ loginMessage.textContent="خطأ في تسجيل الدخول";
 
 
 
+// خروج
 
 logoutBtn.onclick=()=>{
 
@@ -425,6 +412,7 @@ signOut(auth);
 
 
 
+// التحقق
 
 onAuthStateChanged(auth,user=>{
 
@@ -436,6 +424,8 @@ loginBox.classList.add("hidden");
 
 adminBox.classList.remove("hidden");
 
+
+loadPoets();
 
 loadPosts();
 
@@ -454,33 +444,121 @@ adminBox.classList.add("hidden");
 
 }
 
-
 });
 
 
+// إضافة شاعر
+
+addPoetBtn.onclick=async()=>{
 
 
+await addDoc(
 
-publishBtn.onclick=async()=>{
+collection(db,"poets"),
 
+{
 
-const data={
+name:poetName.value,
 
-title:title.value.trim(),
+bio:poetBio.value,
 
-author:author.value.trim(),
-
-type:type.value,
-
-content:content.value.trim(),
+style:poetStyle.value,
 
 createdAt:serverTimestamp()
+
+}
+
+);
+
+
+poetMessage.textContent="تمت إضافة الشاعر";
+
+
+poetName.value="";
+
+poetBio.value="";
+
+poetStyle.value="";
+
+
+loadPoets();
+
 
 };
 
 
 
-if(!data.title || !data.author || !data.content){
+// جلب الشعراء
+
+async function loadPoets(){
+
+
+poetSelect.innerHTML=
+"<option value=''>اختر الشاعر</option>";
+
+
+poetsList.innerHTML="";
+
+
+const snap=await getDocs(collection(db,"poets"));
+
+
+snap.forEach(p=>{
+
+
+let d=p.data();
+
+
+poetSelect.innerHTML+=`
+
+<option value="${p.id}">
+${d.name}
+</option>
+
+`;
+
+
+poetsList.innerHTML+=`
+
+<div class="item">
+
+<h3>${d.name}</h3>
+
+<p>${d.bio || ""}</p>
+
+<p>${d.style || ""}</p>
+
+
+<button class="red"
+onclick="deletePoet('${p.id}')">
+حذف
+</button>
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+
+window.deletePoet=async(id)=>{
+
+
+await deleteDoc(doc(db,"poets",id));
+
+loadPoets();
+
+};
+  // نشر القصيدة
+
+publishBtn.onclick=async()=>{
+
+
+if(!title.value || !content.value || !poetSelect.value){
 
 publishMessage.textContent="أكمل جميع الحقول";
 
@@ -490,14 +568,31 @@ return;
 
 
 
-try{
+const poetSnap = await getDoc(
+doc(db,"poets",poetSelect.value)
+);
+
 
 
 await addDoc(
 
 collection(db,"posts"),
 
-data
+{
+
+title:title.value.trim(),
+
+author:poetSnap.data().name,
+
+poetId:poetSelect.value,
+
+type:type.value,
+
+content:content.value.trim(),
+
+createdAt:serverTimestamp()
+
+}
 
 );
 
@@ -508,23 +603,10 @@ publishMessage.textContent="تم النشر بنجاح";
 
 title.value="";
 
-author.value="";
-
 content.value="";
 
 
 loadPosts();
-
-
-}
-
-catch(error){
-
-console.log(error);
-
-publishMessage.textContent="حدث خطأ أثناء النشر";
-
-}
 
 
 };
@@ -532,6 +614,8 @@ publishMessage.textContent="حدث خطأ أثناء النشر";
 
 
 
+
+// عرض القصائد
 
 async function loadPosts(){
 
@@ -543,14 +627,10 @@ const snap=await getDocs(collection(db,"posts"));
 
 
 
-snap.forEach(item=>{
+snap.forEach(p=>{
 
 
-const p=item.data();
-
-
-let typeName =
-p.type==="fusha" ? "فصيح" : "شعبي";
+let d=p.data();
 
 
 
@@ -558,31 +638,25 @@ postsList.innerHTML+=`
 
 <div class="item">
 
-<h3>${p.title}</h3>
+<h3>${d.title}</h3>
 
-<p>${p.author}</p>
+<p>${d.author || ""}</p>
 
-<p>${typeName}</p>
+<p>${d.type==="fusha"?"فصيح":"شعبي"}</p>
 
 
 <div class="actions">
 
-
 <button class="red"
-onclick="deletePost('${item.id}')">
-
+onclick="deletePost('${p.id}')">
 حذف
-
 </button>
 
 
 <button class="blue"
-onclick="editPost('${item.id}')">
-
+onclick="editPost('${p.id}')">
 تعديل
-
 </button>
-
 
 </div>
 
@@ -598,15 +672,11 @@ onclick="editPost('${item.id}')">
 
 
 
-
-
 window.deletePost=async(id)=>{
 
 
 await deleteDoc(
-
 doc(db,"posts",id)
-
 );
 
 
@@ -622,11 +692,10 @@ loadPosts();
 window.editPost=async(id)=>{
 
 
-const titleNew=prompt("العنوان الجديد");
+let newTitle=prompt("العنوان الجديد");
 
 
-if(!titleNew)return;
-
+if(!newTitle)return;
 
 
 await updateDoc(
@@ -635,12 +704,11 @@ doc(db,"posts",id),
 
 {
 
-title:titleNew
+title:newTitle
 
 }
 
 );
-
 
 
 loadPosts();
@@ -652,6 +720,9 @@ loadPosts();
 
 
 
+
+
+// الإعدادات
 
 saveSettings.onclick=async()=>{
 
@@ -684,11 +755,10 @@ settingsMessage.textContent="تم حفظ الإعدادات";
 
 
 
-
 async function loadSettings(){
 
 
-const snap=await getDoc(
+const s=await getDoc(
 
 doc(db,"settings","main")
 
@@ -696,29 +766,32 @@ doc(db,"settings","main")
 
 
 
-if(snap.exists()){
+if(s.exists()){
 
 
-const s=snap.data();
+let d=s.data();
 
 
-siteName.value=s.name || "";
+siteName.value=d.name || "";
 
-siteDesc.value=s.description || "";
+siteDesc.value=d.description || "";
 
-channelLink.value=s.channel || "";
+channelLink.value=d.channel || "";
 
-contactEmail.value=s.email || "";
-
-
-}
+contactEmail.value=d.email || "";
 
 
 }
 
 
+}
 
 
+
+
+
+
+// التنقل بين الأقسام
 
 
 showPublish.onclick=()=>{
@@ -726,6 +799,8 @@ showPublish.onclick=()=>{
 publishBox.classList.remove("hidden");
 
 postsBox.classList.add("hidden");
+
+poetsBox.classList.add("hidden");
 
 settingsBox.classList.add("hidden");
 
@@ -739,9 +814,27 @@ publishBox.classList.add("hidden");
 
 postsBox.classList.remove("hidden");
 
+poetsBox.classList.add("hidden");
+
 settingsBox.classList.add("hidden");
 
 loadPosts();
+
+};
+
+
+
+showPoets.onclick=()=>{
+
+publishBox.classList.add("hidden");
+
+postsBox.classList.add("hidden");
+
+poetsBox.classList.remove("hidden");
+
+settingsBox.classList.add("hidden");
+
+loadPoets();
 
 };
 
@@ -753,15 +846,17 @@ publishBox.classList.add("hidden");
 
 postsBox.classList.add("hidden");
 
+poetsBox.classList.add("hidden");
+
 settingsBox.classList.remove("hidden");
+
+loadSettings();
 
 };
 
 
 
-
 </script>
-
 
 </body>
 
