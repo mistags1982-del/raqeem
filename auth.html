@@ -10,6 +10,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
 
+
 <style>
 
 body{
@@ -24,21 +25,18 @@ color:#1d1d1f;
 width:min(420px,90%);
 margin:80px auto;
 
-background:rgba(255,255,255,.7);
-backdrop-filter:blur(25px);
+background:white;
 
 padding:35px;
 
 border-radius:25px;
 
-box-shadow:
-0 20px 60px rgba(0,0,0,.08);
+box-shadow:0 20px 60px rgba(0,0,0,.08);
 
 }
 
 h1{
 text-align:center;
-margin-bottom:30px;
 }
 
 
@@ -47,15 +45,13 @@ input{
 width:100%;
 padding:15px;
 
-margin-bottom:15px;
+margin:10px 0;
 
 border:1px solid #ddd;
 
 border-radius:15px;
 
 font-family:inherit;
-
-font-size:15px;
 
 }
 
@@ -76,7 +72,16 @@ color:white;
 
 font-size:16px;
 
+margin-top:10px;
+
 cursor:pointer;
+
+}
+
+
+.google{
+
+background:#111;
 
 }
 
@@ -85,11 +90,11 @@ cursor:pointer;
 
 text-align:center;
 
-margin-top:20px;
-
 color:#007aff;
 
 cursor:pointer;
+
+margin-top:20px;
 
 }
 
@@ -100,17 +105,18 @@ text-align:center;
 
 color:#777;
 
-margin-top:15px;
-
 }
 
 
 .hidden{
+
 display:none;
+
 }
 
 
 </style>
+
 
 </head>
 
@@ -126,12 +132,25 @@ display:none;
 </h1>
 
 
+
+<button id="googleBtn" class="google">
+تسجيل بواسطة Google
+</button>
+
+
+
+<hr>
+
+
+
 <div id="register">
 
 
 <input id="name" placeholder="الاسم">
 
+
 <input id="email" type="email" placeholder="البريد الإلكتروني">
+
 
 <input id="password" type="password" placeholder="كلمة المرور">
 
@@ -162,20 +181,20 @@ display:none;
 </div>
 
 
-<p class="switch" id="switch">
 
+<p id="switch" class="switch">
 لديك حساب؟ تسجيل الدخول
-
 </p>
 
 
-<p class="message" id="message"></p>
+
+<p id="message" class="message"></p>
 
 
 </div>
 
 
-<script type="module" src="auth.js"></script>
+<script type="module" src="./auth.js"></script>
 
 
 </body>
