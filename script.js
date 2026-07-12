@@ -1,247 +1,365 @@
-import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
-.then(async ({ initializeApp }) => {
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-const {
-getFirestore,
-collection,
-getDocs,
-query,
-orderBy
-} = await import(
-"https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js"
-);
+<head>
 
+<meta charset="UTF-8">
 
-const firebaseConfig = {
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+<meta name="description" content="رقيم، مساحة عربية للشعر الفصيح والشعبي">
 
-authDomain:"raqeem-2ab23.firebaseapp.com",
-
-projectId:"raqeem-2ab23",
-
-storageBucket:"raqeem-2ab23.firebasestorage.app",
-
-messagingSenderId:"404345905166",
-
-appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
-
-};
+<title>رقيم</title>
 
 
-const app = initializeApp(firebaseConfig);
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-const db = getFirestore(app);
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-
-
-const grid = document.getElementById("poemGrid");
-
-const poetsGrid = document.getElementById("poetsGrid");
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 
+<link rel="stylesheet" href="style.css">
 
-function escapeHTML(text=""){
-
-const div=document.createElement("div");
-
-div.textContent=text;
-
-return div.innerHTML;
-
-}
+</head>
 
 
-
-// تحميل الشعراء
-
-async function loadPoets(){
-
-if(!poetsGrid) return;
+<body>
 
 
-try{
+<header class="header">
+
+<div class="header-inner">
 
 
-const snap = await getDocs(
-collection(db,"poets")
-);
-
-
-
-poetsGrid.innerHTML="";
-
-
-
-if(snap.empty){
-
-poetsGrid.innerHTML="<p>لا يوجد شعراء حالياً</p>";
-
-return;
-
-}
-
-
-
-snap.forEach(item=>{
-
-
-const poet=item.data();
-
-
-
-poetsGrid.innerHTML += `
-
-<article class="card">
-
-<div class="card-body">
-
-<h3>
-${escapeHTML(poet.name)}
-</h3>
-
-<p>
-${escapeHTML(poet.style || "")}
-</p>
-
-
-<a href="poet.html?name=${encodeURIComponent(poet.name)}">
-
-صفحة الشاعر ←
-
+<a href="index.html" class="logo">
+رقيم
 </a>
+
+
+<nav class="nav">
+
+<a href="#texts">
+النصوص
+</a>
+
+<a href="#poets">
+الشعراء
+</a>
+
+<a href="#submit">
+أرسل قصيدتك
+</a>
+
+<a href="#about">
+من نحن
+</a>
+
+<a href="#contact">
+تواصل
+</a>
+
+
+</nav>
+
 
 </div>
 
-</article>
-
-`;
-
-});
-
-
-}
-
-catch(error){
-
-console.log(error);
-
-poetsGrid.innerHTML="<p>خطأ في تحميل الشعراء</p>";
-
-}
-
-
-}
+</header>
 
 
 
-
-// تحميل القصائد
-
-async function loadPosts(){
-
-
-if(!grid) return;
-
-
-try{
-
-
-const q=query(
-
-collection(db,"posts"),
-
-orderBy("createdAt","desc")
-
-);
+<main>
 
 
 
-const snap=await getDocs(q);
+<section class="hero">
 
-
-grid.innerHTML="";
-
-
-snap.forEach(item=>{
-
-
-const post=item.data();
-
-
-
-grid.innerHTML += `
-
-
-<article class="card">
-
-
-<div class="card-body">
-
-
-<small>
-
-${escapeHTML(post.author || "رقيم")}
-
-</small>
-
-
-<h3>
-
-${escapeHTML(post.title)}
-
-</h3>
+<h1>
+رقيم
+</h1>
 
 
 <p>
-
-${escapeHTML(
-(post.content || "").substring(0,150)
-)}
-
+للكلمة مكان
 </p>
 
 
-<a href="post.html?id=${item.id}">
+</section>
 
-قراءة النص ←
 
-</a>
+
+
+
+<section class="texts" id="texts">
+
+
+<div class="section-header">
+
+
+<h2>
+النصوص
+</h2>
+
+
+<div class="filters">
+
+
+<button class="filter active" data-type="all">
+الكل
+</button>
+
+
+<button class="filter" data-type="fusha">
+فصيح
+</button>
+
+
+<button class="filter" data-type="shaabi">
+شعبي
+</button>
 
 
 </div>
 
 
-</article>
+</div>
 
 
-`;
+
+<div id="poemGrid" class="poem-grid">
+
+<p class="loading">
+جارٍ تحميل النصوص...
+</p>
 
 
-});
+</div>
 
 
-}
 
-
-catch(error){
-
-console.log(error);
-
-grid.innerHTML="<p>تعذر تحميل النصوص</p>";
-
-}
-
-
-}
+</section>
 
 
 
 
 
-loadPosts();
-
-loadPoets();
+<section class="poets" id="poets">
 
 
-});
+<div class="section-header">
+
+<h2>
+الشعراء
+</h2>
+
+
+</div>
+
+
+<div id="poetsGrid" class="poem-grid">
+
+
+<p class="loading">
+جارٍ تحميل الشعراء...
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+<section class="submit-poem" id="submit">
+
+
+<p class="label">
+شاركنا
+</p>
+
+
+<h2>
+أرسل قصيدتك
+</h2>
+
+
+<p class="about-text">
+أرسل نصك وسيتم مراجعته قبل النشر.
+</p>
+
+
+
+<input id="senderName" placeholder="اسم الشاعر">
+
+
+
+<input id="poemTitle" placeholder="عنوان القصيدة">
+
+
+
+<select id="poemType">
+
+
+<option value="fusha">
+فصيح
+</option>
+
+
+<option value="shaabi">
+شعبي
+</option>
+
+
+</select>
+
+
+
+<textarea id="poemContent" placeholder="اكتب القصيدة"></textarea>
+
+
+
+<button id="sendPoem">
+إرسال للمراجعة
+</button>
+
+
+
+<p id="sendMessage"></p>
+
+
+
+</section>
+
+
+
+
+
+<section class="about" id="about">
+
+
+<p class="label">
+من نحن
+</p>
+
+
+<h2>
+مساحة للكلمة
+</h2>
+
+
+<p class="about-text">
+
+رقيم مساحة أدبية للنصوص الشعرية
+الفصيحة والشعبية. مكان هادئ للكلمة،
+بعيد عن الضجيج.
+
+</p>
+
+
+</section>
+
+
+
+
+
+
+<section class="contact" id="contact">
+
+
+<p class="label">
+تواصل
+</p>
+
+
+<h2>
+ابقَ قريبًا
+</h2>
+
+
+
+<div class="contact-links">
+
+
+<a href="https://t.me/raqeemm" target="_blank">
+
+<span>
+قناة رقيم
+</span>
+
+<span class="arrow">
+‹
+</span>
+
+</a>
+
+
+
+<a href="https://t.me/ThewriterMustafa" target="_blank">
+
+<span>
+تواصل معنا
+</span>
+
+<span class="arrow">
+‹
+</span>
+
+</a>
+
+
+
+<a href="mailto:fdm42143@gmail.com">
+
+<span>
+البريد
+</span>
+
+<span class="arrow">
+‹
+</span>
+
+</a>
+
+
+
+</div>
+
+
+</section>
+
+
+
+</main>
+
+
+
+
+<footer class="footer">
+
+
+<span>
+رقيم
+</span>
+
+
+<span>
+© 2026
+</span>
+
+
+</footer>
+
+
+
+<script type="module" src="script.js"></script>
+
+
+
+</body>
+
+</html>
