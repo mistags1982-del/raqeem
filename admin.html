@@ -235,16 +235,7 @@ document.getElementById("loginBtn").onclick = async () => {
       loginMessage.textContent = "غير مصرح لك بالدخول";
 
       return;
-    }
-
-    if(!result.user.emailVerified){
-
-      loginMessage.textContent =
-      "يجب توثيق البريد الإلكتروني أولاً";
-
-      return;
-    }
-
+  
     loginMessage.textContent = "";
 
   }
@@ -340,8 +331,7 @@ onAuthStateChanged(auth,user => {
 
   if(
     user &&
-    user.email === ADMIN_EMAIL &&
-    user.emailVerified
+    user.email === ADMIN_EMAIL 
   ){
 
     loginBox.classList.add("hidden");
