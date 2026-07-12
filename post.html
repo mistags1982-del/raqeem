@@ -11,250 +11,299 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 
 <style>
 
-@font-face {
-  font-family: "AmiriLocal";
-  src: url("alfont_com_Amiri-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+*{
+box-sizing:border-box;
 }
 
-* {
-  box-sizing: border-box;
+body{
+
+margin:0;
+
+background:#f7f7f5;
+
+color:#1c1c1e;
+
+font-family:"Noto Sans Arabic",sans-serif;
+
 }
 
-body {
-  margin: 0;
-  background: #f7f7f5;
-  color: #1c1c1e;
-  font-family: "Noto Sans Arabic", sans-serif;
+
+.page{
+
+width:min(760px,92%);
+
+margin:auto;
+
+padding:35px 0 100px;
+
 }
 
-button,
-input,
-textarea {
-  font-family: inherit;
+
+.back{
+
+display:inline-block;
+
+margin-bottom:45px;
+
+color:#8e8e93;
+
+text-decoration:none;
+
+font-size:14px;
+
 }
 
-.page {
-  width: min(760px, 92%);
-  margin: auto;
-  padding: 35px 0 100px;
+
+
+article{
+
+background:#fff;
+
+border-radius:22px;
+
+padding:45px;
+
+box-shadow:
+0 5px 25px rgba(0,0,0,.04);
+
 }
 
-.back {
-  display: inline-block;
-  margin-bottom: 45px;
-  color: #8e8e93;
-  text-decoration: none;
-  font-size: 14px;
+
+
+.title{
+
+margin:0;
+
+font-size:40px;
+
+font-weight:700;
+
+line-height:1.6;
+
 }
 
-article {
-  background: #fff;
-  border-radius: 22px;
-  padding: 45px;
-  box-shadow: 0 5px 25px rgba(0,0,0,.04);
+
+
+.author{
+
+margin-top:14px;
+
+margin-bottom:45px;
+
+color:#555;
+
+font-size:17px;
+
+font-weight:600;
+
 }
 
-.title {
-  margin: 0;
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 1.6;
-  letter-spacing: -.5px;
+
+
+.content{
+
+font-size:32px;
+
+line-height:2.35;
+
+white-space:pre-wrap;
+
+color:#111;
+
 }
 
-.author {
-  margin-top: 14px;
-  margin-bottom: 45px;
-  color: #555;
-  font-size: 17px;
-  font-weight: 600;
+
+
+.post-actions{
+
+display:flex;
+
+gap:12px;
+
+align-items:center;
+
+margin-top:45px;
+
+padding-top:22px;
+
+border-top:1px solid #eee;
+
 }
 
-.content {
-  font-family: "AmiriLocal", serif;
-  font-size: 32px;
-  line-height: 2.35;
-  white-space: pre-wrap;
-  color: #111;
+
+
+.stat-box{
+
+background:#f7f7f5;
+
+border-radius:12px;
+
+padding:10px 15px;
+
+font-size:14px;
+
+color:#666;
+
 }
 
-.post-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 45px;
-  padding-top: 22px;
-  border-top: 1px solid #eee;
+
+
+.like-button{
+
+border:0;
+
+background:#f7f7f5;
+
+border-radius:12px;
+
+padding:10px 18px;
+
+font-size:14px;
+
+cursor:pointer;
+
 }
 
-.stat-box {
-  background: #f7f7f5;
-  border-radius: 12px;
-  padding: 10px 15px;
-  color: #666;
-  font-size: 14px;
+
+
+.like-button.liked{
+
+background:#111;
+
+color:#fff;
+
 }
 
-.like-button {
-  border: 0;
-  background: #f7f7f5;
-  border-radius: 12px;
-  padding: 10px 15px;
-  color: #555;
-  font-size: 14px;
-  cursor: pointer;
-  transition: .2s;
+
+
+.comments{
+
+margin-top:35px;
+
+background:#fff;
+
+border-radius:22px;
+
+padding:35px;
+
+box-shadow:
+0 5px 25px rgba(0,0,0,.04);
+
 }
 
-.like-button:hover {
-  background: #eee;
+
+
+.comments-title{
+
+margin:0 0 30px;
+
+font-size:25px;
+
 }
 
-.like-button.liked {
-  background: #111;
-  color: #fff;
+
+
+.comment-form textarea{
+
+width:100%;
+
+min-height:120px;
+
+border:1px solid #ddd;
+
+border-radius:14px;
+
+padding:15px;
+
+font-size:15px;
+
+font-family:inherit;
+
+resize:none;
+
 }
 
-.message {
-  text-align: center;
-  color: #999;
-  padding: 80px 0;
+
+
+.comment-form button{
+
+margin-top:12px;
+
+border:0;
+
+background:#111;
+
+color:#fff;
+
+padding:13px 25px;
+
+border-radius:13px;
+
+cursor:pointer;
+
 }
 
-.comments {
-  margin-top: 35px;
-  background: #fff;
-  border-radius: 22px;
-  padding: 35px;
-  box-shadow: 0 5px 25px rgba(0,0,0,.04);
+
+
+.comment{
+
+padding:20px 0;
+
+border-top:1px solid #eee;
+
 }
 
-.comments-title {
-  margin: 0 0 30px;
-  font-size: 25px;
+
+
+.comment-name{
+
+font-weight:700;
+
+margin-bottom:8px;
+
 }
 
-.comment-form {
-  margin-bottom: 40px;
+
+
+.comment-text{
+
+line-height:2;
+
+white-space:pre-wrap;
+
 }
 
-.comment-form input,
-.comment-form textarea {
-  width: 100%;
-  border: 1px solid #e5e5e5;
-  background: #fafafa;
-  border-radius: 14px;
-  padding: 15px;
-  margin-bottom: 12px;
-  font-size: 15px;
-  outline: none;
-}
 
-.comment-form textarea {
-  min-height: 110px;
-  resize: vertical;
-}
 
-.comment-form input:focus,
-.comment-form textarea:focus {
-  background: #fff;
-  border-color: #999;
-}
+.message{
 
-.comment-form button {
-  border: 0;
-  background: #1c1c1e;
-  color: #fff;
-  border-radius: 13px;
-  padding: 13px 25px;
-  font-size: 14px;
-  cursor: pointer;
-}
+text-align:center;
 
-.comment-form button:disabled,
-.like-button:disabled {
-  opacity: .55;
-  cursor: default;
-}
+color:#999;
 
-#commentMessage {
-  font-size: 13px;
-  color: #777;
-  margin-top: 12px;
-}
-
-.comment {
-  padding: 20px 0;
-  border-top: 1px solid #eee;
-}
-
-.comment-name {
-  font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 7px;
-}
-
-.comment-text {
-  font-size: 15px;
-  line-height: 2;
-  white-space: pre-wrap;
-  color: #333;
-}
-
-.empty-comments {
-  color: #999;
-  font-size: 14px;
-}
-
-@media(max-width:600px) {
-
-  article {
-    padding: 30px 22px;
-    border-radius: 18px;
-  }
-
-  .title {
-    font-size: 32px;
-  }
-
-  .author {
-    font-size: 16px;
-  }
-
-  .content {
-    font-size: 26px;
-    line-height: 2.2;
-  }
-
-  .post-actions {
-    flex-wrap: wrap;
-  }
-
-  .comments {
-    padding: 25px 20px;
-    border-radius: 18px;
-  }
+padding:80px 0;
 
 }
 
 </style>
 
 </head>
-
 <body>
 
+
 <div class="page">
+
 
 <a class="back" href="index.html">
 ← العودة إلى رقيم
 </a>
+
+
 
 <div id="post">
 
@@ -265,19 +314,19 @@ article {
 </div>
 
 
+
+
 <section class="comments">
+
 
 <h2 class="comments-title">
 التعليقات
 </h2>
 
+
+
 <div class="comment-form">
 
-<input
-id="commentName"
-maxlength="40"
-placeholder="اسمك"
->
 
 <textarea
 id="commentText"
@@ -285,87 +334,188 @@ maxlength="500"
 placeholder="اكتب تعليقك..."
 ></textarea>
 
+
+
 <button id="sendComment">
 نشر التعليق
 </button>
 
+
+
 <p id="commentMessage"></p>
 
+
 </div>
+
+
+
 
 <div id="commentsList">
 
-<p class="empty-comments">
+
+<p class="message">
 جارٍ تحميل التعليقات...
 </p>
 
+
 </div>
+
+
 
 </section>
 
+
 </div>
+
+
+
+
 
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
 import {
-  getFirestore,
-  doc,
-  getDoc,
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  where,
-  serverTimestamp,
-  updateDoc,
-  increment
+
+initializeApp
+
 }
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+
+
+import {
+
+getFirestore,
+
+doc,
+
+getDoc,
+
+collection,
+
+addDoc,
+
+getDocs,
+
+query,
+
+where,
+
+updateDoc,
+
+increment,
+
+setDoc
+
+}
+
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
-const firebaseConfig = {
 
-  apiKey: "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+import {
 
-  authDomain: "raqeem-2ab23.firebaseapp.com",
+getAuth,
 
-  projectId: "raqeem-2ab23",
+onAuthStateChanged
 
-  storageBucket: "raqeem-2ab23.firebasestorage.app",
+}
 
-  messagingSenderId: "404345905166",
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
-  appId: "1:404345905166:web:3809b83c0e56c1a6781c5f"
+
+
+
+
+const firebaseConfig={
+
+
+apiKey:
+"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+
+authDomain:
+"raqeem-2ab23.firebaseapp.com",
+
+
+projectId:
+"raqeem-2ab23",
+
+
+storageBucket:
+"raqeem-2ab23.firebasestorage.app",
+
+
+messagingSenderId:
+"404345905166",
+
+
+appId:
+"1:404345905166:web:3809b83c0e56c1a6781c5f"
+
 
 };
 
 
-const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+
+
+const app =
+initializeApp(firebaseConfig);
+
+
+
+const db =
+getFirestore(app);
+
+
+
+const auth =
+getAuth(app);
+
+
+
+let currentUser = null;
+
+
+
+onAuthStateChanged(auth,user=>{
+
+currentUser=user;
+
+});
+
+
+
 
 
 const postBox =
 document.getElementById("post");
 
+
+
 const commentsList =
 document.getElementById("commentsList");
 
-const commentName =
-document.getElementById("commentName");
+
 
 const commentText =
 document.getElementById("commentText");
 
+
+
 const sendComment =
 document.getElementById("sendComment");
 
+
+
 const commentMessage =
 document.getElementById("commentMessage");
+
+
+
 
 
 const id =
@@ -374,457 +524,486 @@ window.location.search
 ).get("id");
 
 
+
+
+
 const postRef =
-id ? doc(db, "posts", id) : null;
+doc(db,"posts",id);
 
 
-function safe(text = "") {
 
-  const div =
-  document.createElement("div");
 
-  div.textContent =
-  String(text);
 
-  return div.innerHTML;
+function safe(text=""){
+
+
+const div =
+document.createElement("div");
+
+
+div.textContent=text;
+
+
+return div.innerHTML;
+
+
+}
+  async function loadPost(){
+
+
+try{
+
+
+const snap =
+await getDoc(postRef);
+
+
+
+if(!snap.exists()){
+
+
+postBox.innerHTML =
+
+`
+<p class="message">
+النص غير موجود
+</p>
+`;
+
+return;
 
 }
 
 
-function likedKey() {
 
-  return "raqeem-liked-" + id;
+const data =
+snap.data();
+
+
+
+document.title =
+(data.title || "رقيم") + " | رقيم";
+
+
+
+postBox.innerHTML =
+
+`
+
+<article>
+
+
+<h1 class="title">
+${safe(data.title || "بلا عنوان")}
+</h1>
+
+
+
+<div class="author">
+بقلم ${safe(data.author || "رقيم")}
+</div>
+
+
+
+<div class="content">
+${safe(data.content || "")}
+</div>
+
+
+
+
+<div class="post-actions">
+
+
+<div class="stat-box">
+
+المشاهدات:
+${data.views || 0}
+
+</div>
+
+
+
+<button
+id="likeButton"
+class="like-button"
+>
+
+❤️ إعجاب
+
+<span id="likesCount">
+
+${data.likes || 0}
+
+</span>
+
+</button>
+
+
+</div>
+
+
+
+</article>
+
+`;
+
+
+
+document
+.getElementById("likeButton")
+.onclick = likePost;
+
+
 
 }
 
 
-async function increaseView() {
 
-  const viewKey =
-  "raqeem-viewed-" + id;
+catch(error){
 
-
-  if (
-    sessionStorage.getItem(viewKey)
-  ) {
-
-    return;
-
-  }
+console.log(error);
 
 
-  try {
+postBox.innerHTML =
 
-    await updateDoc(
-      postRef,
-      {
-        views: increment(1)
-      }
-    );
-
-
-    sessionStorage.setItem(
-      viewKey,
-      "1"
-    );
-
-  }
-
-  catch(error) {
-
-    console.error(
-      "View error:",
-      error
-    );
-
-  }
+`
+<p class="message">
+حدث خطأ في تحميل النص
+</p>
+`;
 
 }
 
 
-async function loadPost() {
-
-  if (!id) {
-
-    postBox.innerHTML =
-    "<p class='message'>النص غير موجود</p>";
-
-    return;
-
-  }
+}
 
 
-  try {
-
-    await increaseView();
 
 
-    const snap =
-    await getDoc(postRef);
 
 
-    if (!snap.exists()) {
-
-      postBox.innerHTML =
-      "<p class='message'>النص غير موجود</p>";
-
-      return;
-
-    }
 
 
-    const data =
-    snap.data();
+async function likePost(){
 
 
-    const liked =
-    localStorage.getItem(
-      likedKey()
-    ) === "1";
+if(!currentUser){
 
 
-    document.title =
-    (data.title || "رقيم") +
-    " | رقيم";
+alert("سجل الدخول بحساب Google أولاً");
 
 
-    postBox.innerHTML = `
-
-    <article>
-
-      <h1 class="title">
-      ${safe(data.title || "بلا عنوان")}
-      </h1>
-
-
-      <div class="author">
-      بقلم ${safe(data.author || "رقيم")}
-      </div>
-
-
-      <div class="content">${safe(data.content || "")}</div>
-
-
-      <div class="post-actions">
-
-        <div class="stat-box">
-        المشاهدات:
-        <span id="viewsCount">
-        ${data.views || 0}
-        </span>
-        </div>
-
-
-        <button
-        id="likeButton"
-        class="like-button ${liked ? "liked" : ""}"
-        >
-
-        ${liked ? "أعجبني" : "إعجاب"}
-
-        ·
-
-        <span id="likesCount">
-        ${data.likes || 0}
-        </span>
-
-        </button>
-
-      </div>
-
-    </article>
-
-    `;
-
-
-    const likeButton =
-    document.getElementById(
-      "likeButton"
-    );
-
-
-    likeButton.onclick =
-    handleLike;
-
-  }
-
-  catch(error) {
-
-    console.error(error);
-
-    postBox.innerHTML =
-    "<p class='message'>حدث خطأ أثناء تحميل النص</p>";
-
-  }
+return;
 
 }
 
 
-async function handleLike() {
 
-  const likeButton =
-  document.getElementById(
-    "likeButton"
-  );
+const likeId =
+id + "_" + currentUser.uid;
 
 
-  const likesCount =
-  document.getElementById(
-    "likesCount"
-  );
+
+const likeRef =
+doc(db,"likes",likeId);
 
 
-  if (
-    localStorage.getItem(
-      likedKey()
-    ) === "1"
-  ) {
 
-    return;
-
-  }
+try{
 
 
-  likeButton.disabled = true;
+const likeSnap =
+await getDoc(likeRef);
 
 
-  try {
 
-    await updateDoc(
-      postRef,
-      {
-        likes: increment(1)
-      }
-    );
+if(likeSnap.exists()){
 
-
-    localStorage.setItem(
-      likedKey(),
-      "1"
-    );
-
-
-    likesCount.textContent =
-    Number(
-      likesCount.textContent
-    ) + 1;
-
-
-    likeButton.classList.add(
-      "liked"
-    );
-
-
-    likeButton.childNodes[0].textContent =
-    " أعجبني ";
-
-
-  }
-
-  catch(error) {
-
-    console.error(
-      "Like error:",
-      error
-    );
-
-  }
-
-
-  likeButton.disabled = false;
+return;
 
 }
 
 
-async function loadComments() {
-
-  if (!id) return;
 
 
-  try {
+await setDoc(
 
-    const commentsQuery =
-    query(
-      collection(db, "comments"),
-      where("postId", "==", id)
-    );
+likeRef,
 
+{
 
-    const snapshot =
-    await getDocs(commentsQuery);
+postId:id,
 
-
-    const comments =
-    snapshot.docs.map(item => ({
-
-      id: item.id,
-
-      ...item.data()
-
-    }));
-
-
-    comments.sort((a, b) => {
-
-      const first =
-      a.createdAt?.seconds || 0;
-
-      const second =
-      b.createdAt?.seconds || 0;
-
-      return second - first;
-
-    });
-
-
-    commentsList.innerHTML = "";
-
-
-    if (
-      comments.length === 0
-    ) {
-
-      commentsList.innerHTML = `
-
-      <p class="empty-comments">
-      لا توجد تعليقات بعد.
-      </p>
-
-      `;
-
-      return;
-
-    }
-
-
-    comments.forEach(comment => {
-
-      const box =
-      document.createElement("div");
-
-
-      box.className =
-      "comment";
-
-
-      box.innerHTML = `
-
-      <div class="comment-name">
-      ${safe(comment.name || "زائر")}
-      </div>
-
-      <div class="comment-text">${safe(comment.text || "")}</div>
-
-      `;
-
-
-      commentsList.appendChild(
-        box
-      );
-
-    });
-
-  }
-
-  catch(error) {
-
-    console.error(error);
-
-
-    commentsList.innerHTML = `
-
-    <p class="empty-comments">
-    تعذر تحميل التعليقات.
-    </p>
-
-    `;
-
-  }
+uid:currentUser.uid
 
 }
+
+);
+
+
+
+
+await updateDoc(
+
+postRef,
+
+{
+
+likes:increment(1)
+
+}
+
+);
+
+
+
+const count =
+document.getElementById("likesCount");
+
+
+
+count.textContent =
+Number(count.textContent)+1;
+
+
+
+document
+.getElementById("likeButton")
+.classList.add("liked");
+
+
+
+}
+
+
+catch(error){
+
+console.log(error);
+
+}
+
+
+}
+  async function loadComments(){
+
+
+try{
+
+
+const q =
+query(
+
+collection(db,"comments"),
+
+where("postId","==",id)
+
+);
+
+
+
+const snapshot =
+await getDocs(q);
+
+
+
+commentsList.innerHTML = "";
+
+
+
+if(snapshot.empty){
+
+
+commentsList.innerHTML =
+
+`
+<p class="message">
+لا توجد تعليقات بعد.
+</p>
+`;
+
+return;
+
+
+}
+
+
+
+
+snapshot.forEach(item=>{
+
+
+const comment =
+item.data();
+
+
+
+const div =
+document.createElement("div");
+
+
+
+div.className =
+"comment";
+
+
+
+div.innerHTML =
+
+`
+
+<div class="comment-name">
+
+مستخدم رقيم
+
+</div>
+
+
+<div class="comment-text">
+
+${safe(comment.text || "")}
+
+</div>
+
+`;
+
+
+
+commentsList.appendChild(div);
+
+
+
+});
+
+
+}
+
+catch(error){
+
+console.log(error);
+
+
+commentsList.innerHTML =
+
+`
+<p class="message">
+تعذر تحميل التعليقات
+</p>
+`;
+
+}
+
+
+}
+
+
+
+
+
+
 
 
 sendComment.onclick = async()=>{
 
 
-  const name =
-  commentName.value.trim();
+if(!currentUser){
 
 
-  const text =
-  commentText.value.trim();
+commentMessage.textContent =
+"سجل الدخول بحساب Google أولاً";
 
 
-  if (!name || !text) {
+return;
 
-    commentMessage.textContent =
-    "اكتب اسمك وتعليقك.";
-
-    return;
-
-  }
+}
 
 
-  sendComment.disabled = true;
+
+const text =
+commentText.value.trim();
 
 
-  commentMessage.textContent =
-  "جارٍ نشر التعليق...";
+
+if(!text){
 
 
-  try {
-
-    await addDoc(
-
-      collection(db, "comments"),
-
-      {
-
-        postId: id,
-
-        name: name,
-
-        text: text,
-
-        createdAt: serverTimestamp()
-
-      }
-
-    );
+commentMessage.textContent =
+"اكتب تعليقك";
 
 
-    commentText.value = "";
+return;
 
 
-    commentMessage.textContent =
-    "تم نشر تعليقك.";
+}
 
 
-    await loadComments();
-
-  }
-
-  catch(error) {
-
-    console.error(error);
 
 
-    commentMessage.textContent =
-    "تعذر نشر التعليق.";
-
-  }
+try{
 
 
-  sendComment.disabled = false;
+await addDoc(
+
+collection(db,"comments"),
+
+{
+
+postId:id,
+
+uid:currentUser.uid,
+
+text:text
+
+}
+
+);
+
+
+
+commentText.value = "";
+
+
+
+commentMessage.textContent =
+"تم نشر التعليق";
+
+
+
+await loadComments();
+
+
+
+}
+
+catch(error){
+
+
+console.log(error);
+
+
+commentMessage.textContent =
+"حدث خطأ أثناء النشر";
+
+
+}
+
 
 };
+
+
+
+
+
 
 
 loadPost();
 
 loadComments();
 
+
+
 </script>
+
 
 </body>
 
