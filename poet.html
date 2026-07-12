@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>الشاعر - رقيم</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+
+margin:0;
+background:#f7f7f5;
+color:#1c1c1e;
+font-family:"Noto Sans Arabic",sans-serif;
+
+}
+
+
+.container{
+
+width:min(800px,92%);
+margin:40px auto;
+
+}
+
+
+.card{
+
+background:white;
+border:1px solid #eee;
+border-radius:20px;
+padding:25px;
+margin-bottom:20px;
+
+}
+
+
+h1{
+
+text-align:center;
+font-size:38px;
+margin:0;
+
+}
+
+
+.bio{
+
+line-height:2;
+color:#555;
+margin-top:20px;
+
+}
+
+
+.poem{
+
+border-top:1px solid #eee;
+padding:20px 0;
+
+}
+
+
+.poem h2{
+
+margin:0 0 10px;
+
+}
+
+
+.meta{
+
+color:#777;
+font-size:14px;
+
+}
+
+
+.content{
+
+white-space:pre-line;
+line-height:2.3;
+margin-top:20px;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<div class="card">
+
+
+<h1 id="poetName">
+الشاعر
+</h1>
+
+
+<p id="poetBio" class="bio">
+
+</p>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h2>
+قصائد الشاعر
+</h2>
+
+
+<div id="poems">
+
+جاري التحميل...
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<script type="module">
+
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+
+
+import {
+
+getFirestore,
+collection,
+getDocs,
+query,
+where
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+authDomain:"raqeem-2ab23.firebaseapp.com",
+
+projectId:"raqeem-2ab23",
+
+storageBucket:"raqeem-2ab23.firebasestorage.app",
+
+messagingSenderId:"404345905166",
+
+appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
+
+};
+
+
+
+const app=initializeApp(firebaseConfig);
+
+const db=getFirestore(app);
+
+
+
+const name =
+new URLSearchParams(location.search).get("name");
+
+
+
+const poetName =
+document.getElementById("poetName");
+
+
+const poems =
+document.getElementById("poems");
+
+
+
+
+poetName.textContent =
+name || "شاعر";
+
+
+
+
+async function loadPoems(){
+
+
+const q=query(
+
+collection(db,"posts"),
+
+where("author","==",name)
+
+);
+
+
+
+const snap =
+await getDocs(q);
+
+
+
+poems.innerHTML="";
+
+
+
+if(snap.empty){
+
+poems.innerHTML=
+"لا توجد قصائد لهذا الشاعر";
+
+return;
+
+}
+
+
+
+snap.forEach(doc=>{
+
+
+const p=doc.data();
+
+
+
+poems.innerHTML += `
+
+
+<div class="poem">
+
+
+<h2>
+${p.title}
+</h2>
+
+
+<div class="meta">
+${p.type==="fusha"?"فصيح":"شعبي"}
+</div>
+
+
+
+<div class="content">
+${p.content}
+</div>
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+}
+
+
+
+loadPoems();
+
+
+
+</script>
+
+
+</body>
+
+</html>
