@@ -1,1 +1,325 @@
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#f4f0e8;color:#1e1c19;direction:rtl;font-family:'Noto Kufi Arabic',sans-serif}a{text-decoration:none;color:inherit}.wrap{width:min(1080px,91%);margin:auto}header{border-bottom:1px solid #dcd3c5;background:rgba(244,240,232,.94);position:sticky;top:0;z-index:5}.nav{height:68px;display:flex;align-items:center}.logo{font:700 32px 'Amiri';color:#805c35;margin-left:auto}nav{display:flex;gap:25px;font-size:11px;color:#6d675f}.hero{padding:100px 0 110px}.hero span,.about span,.contact>span{font-size:10px;color:#805c35}.hero h1{font:700 clamp(54px,9vw,100px)/1.05 'Amiri';margin:20px 0 25px;max-width:800px}.hero p{font:22px/2 'Amiri';color:#6d675f;max-width:600px}.button{display:inline-block;background:#1e1c19;color:#fff;padding:14px 23px;margin-top:20px;font-size:11px}.section{padding:80px 0}.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:30px}.section h2,.about h2{font:700 45px 'Amiri';margin:8px 0}.filters{display:flex;gap:7px}.filters button{border:1px solid #d8cec0;background:transparent;padding:9px 14px;font-family:inherit;font-size:10px;cursor:pointer}.filters button.active{background:#1e1c19;color:white}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#faf8f3;border:1px solid #ddd4c7;overflow:hidden}.card img{width:100%;height:250px;object-fit:cover;display:block}.card-body{padding:24px}.card small{color:#805c35;font-size:9px}.card h3{font:700 29px 'Amiri';margin:8px 0}.card p{font:17px/1.8 'Amiri';color:#746e66}.card a{font-size:10px;color:#805c35}.about{background:#1e1c19;color:#f4f0e8;padding:90px 0}.narrow{max-width:760px}.about p{font:22px/2.1 'Amiri';color:#c9c1b6}.contact h2{max-width:650px}.contact-links{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:30px}.contact-links a{border:1px solid #d8cec0;padding:20px}.contact-links b,.contact-links small{display:block}.contact-links b{font-size:11px}.contact-links small{font-size:9px;color:#746e66;direction:ltr;text-align:right;margin-top:6px}footer{border-top:1px solid #d8cec0;padding:40px 0;text-align:center}footer strong{font:700 31px 'Amiri';color:#805c35}footer p{font-size:9px;color:#746e66}@media(max-width:750px){nav{gap:13px;font-size:9px}.hero{padding:70px 0 75px}.section{padding:55px 0}.section-head{display:block}.filters{margin-top:18px}.grid{grid-template-columns:1fr}.card img{height:230px}.contact-links{grid-template-columns:1fr}.about{padding:65px 0}}
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #faf9f6;
+  color: #1c1c1c;
+  font-family: "IBM Plex Sans Arabic", sans-serif;
+  font-weight: 400;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+.container {
+  width: min(1100px, 90%);
+  margin: auto;
+}
+
+.small-container {
+  width: min(700px, 88%);
+  margin: auto;
+}
+
+
+/* HEADER */
+
+.header {
+  border-bottom: 1px solid #e8e6e0;
+  background: rgba(250, 249, 246, 0.95);
+}
+
+.header-content {
+  min-height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  color: #171717;
+  text-decoration: none;
+  font-size: 27px;
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  gap: 25px;
+}
+
+.nav a {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.nav a:hover {
+  color: #111;
+}
+
+
+/* HERO */
+
+.hero {
+  padding: 110px 0 100px;
+  text-align: center;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(55px, 13vw, 105px);
+  font-weight: 500;
+  letter-spacing: -4px;
+}
+
+.hero p {
+  margin: 10px 0 0;
+  color: #888;
+  font-size: 17px;
+  font-weight: 300;
+}
+
+
+/* TEXTS */
+
+.texts {
+  padding: 40px 0 110px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #dedcd6;
+}
+
+.section-header h2 {
+  margin: 0;
+  font-size: 23px;
+  font-weight: 500;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+}
+
+.filter {
+  border: 0;
+  background: transparent;
+  color: #888;
+  padding: 7px 13px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 30px;
+}
+
+.filter.active {
+  background: #1c1c1c;
+  color: white;
+}
+
+.poem-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e7e5df;
+  border-radius: 4px;
+  padding: 30px;
+  min-height: 270px;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card-body small {
+  color: #999;
+  font-size: 13px;
+}
+
+.card-body h3 {
+  margin: 15px 0;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.card-body p {
+  margin: 0 0 25px;
+  color: #666;
+  font-size: 16px;
+  line-height: 2;
+  font-weight: 300;
+}
+
+.card-body a {
+  color: #222;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.loading {
+  color: #888;
+}
+
+
+/* ABOUT */
+
+.about {
+  padding: 110px 0;
+  background: #f1efe9;
+}
+
+.section-label {
+  display: block;
+  color: #999;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.about h2,
+.contact h2 {
+  margin: 0 0 25px;
+  font-size: clamp(35px, 7vw, 60px);
+  font-weight: 400;
+}
+
+.about p {
+  margin: 0;
+  color: #555;
+  font-size: 19px;
+  line-height: 2.2;
+  font-weight: 300;
+}
+
+
+/* CONTACT */
+
+.contact {
+  padding: 110px 0;
+}
+
+.contact-list {
+  margin-top: 50px;
+  border-top: 1px solid #ddd;
+}
+
+.contact-list a {
+  padding: 22px 0;
+  border-bottom: 1px solid #ddd;
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-list span {
+  font-size: 17px;
+}
+
+.contact-list small {
+  color: #999;
+  direction: ltr;
+}
+
+
+/* FOOTER */
+
+.footer {
+  border-top: 1px solid #e1dfda;
+  padding: 35px 0;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer span {
+  font-weight: 500;
+}
+
+.footer p {
+  margin: 0;
+  color: #999;
+  font-size: 13px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+  .header-content {
+    min-height: 65px;
+  }
+
+  .logo {
+    font-size: 23px;
+  }
+
+  .nav {
+    gap: 14px;
+  }
+
+  .nav a {
+    font-size: 12px;
+  }
+
+  .hero {
+    padding: 85px 0;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .poem-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    min-height: auto;
+    padding: 25px;
+  }
+
+  .about,
+  .contact {
+    padding: 80px 0;
+  }
+
+  .contact-list a {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+}
