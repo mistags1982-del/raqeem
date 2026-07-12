@@ -7,7 +7,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta name="description" content="رقيم، مساحة عربية للشعر الفصيح والشعبي">
+<meta name="theme-color" content="#09090b">
+
+<meta
+name="description"
+content="رقيم، مساحة عربية للشعر الفصيح والشعبي"
+>
 
 <title>رقيم</title>
 
@@ -16,9 +21,10 @@
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+<link
+href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap"
+rel="stylesheet"
+>
 
 <link rel="stylesheet" href="style.css">
 
@@ -28,7 +34,12 @@
 <body>
 
 
-<header class="header">
+<div class="ambient ambient-one"></div>
+
+<div class="ambient ambient-two"></div>
+
+
+<header class="header" id="header">
 
 <div class="header-inner">
 
@@ -40,26 +51,21 @@
 
 <nav class="nav">
 
-
 <a href="#texts">
 النصوص
 </a>
-
 
 <a href="#poets">
 الشعراء
 </a>
 
-
 <a href="#about">
 من نحن
 </a>
 
-
 <a href="#contact">
 تواصل
 </a>
-
 
 </nav>
 
@@ -70,12 +76,18 @@
 
 
 
-
 <main>
 
 
+<section class="hero reveal">
 
-<section class="hero">
+
+<div class="hero-light"></div>
+
+
+<p class="hero-label">
+مساحة عربية للكلمة
+</p>
 
 
 <h1>
@@ -83,9 +95,12 @@
 </h1>
 
 
-<p>
+<p class="hero-description">
 للكلمة مكان
 </p>
+
+
+<div class="scroll-line"></div>
 
 
 </section>
@@ -93,17 +108,23 @@
 
 
 
-
-
-<section class="texts" id="texts">
+<section class="texts section reveal" id="texts">
 
 
 <div class="section-header">
 
 
+<div>
+
+<p class="section-label">
+مختارات رقيم
+</p>
+
 <h2>
 النصوص
 </h2>
+
+</div>
 
 
 <div class="filters">
@@ -131,7 +152,6 @@
 
 
 
-
 <div id="poemGrid" class="poem-grid">
 
 
@@ -148,13 +168,17 @@
 
 
 
-
-
-
-<section class="poets" id="poets">
+<section class="poets section reveal" id="poets">
 
 
 <div class="section-header">
+
+
+<div>
+
+<p class="section-label">
+أصوات رقيم
+</p>
 
 <h2>
 الشعراء
@@ -163,8 +187,11 @@
 </div>
 
 
+</div>
 
-<div id="poetsGrid" class="poem-grid">
+
+
+<div id="poetsGrid" class="poets-grid">
 
 
 <p class="loading">
@@ -175,32 +202,32 @@
 </div>
 
 
-
 </section>
 
 
 
 
+<section class="about reveal" id="about">
 
 
-
-<section class="about" id="about">
-
-
-<p class="label">
+<p class="section-label">
 من نحن
 </p>
 
 
 <h2>
-مساحة للكلمة
+مساحة
+<br>
+للكلمة.
 </h2>
 
 
 <p class="about-text">
 
 رقيم مساحة أدبية للنصوص الشعرية
-الفصيحة والشعبية. مكان هادئ للكلمة،
+الفصيحة والشعبية.
+
+مكان هادئ للكلمة،
 بعيد عن الضجيج.
 
 </p>
@@ -211,19 +238,16 @@
 
 
 
+<section class="contact reveal" id="contact">
 
 
-
-<section class="contact" id="contact">
-
-
-<p class="label">
+<p class="section-label">
 تواصل
 </p>
 
 
 <h2>
-ابقَ قريبًا
+ابقَ قريبًا.
 </h2>
 
 
@@ -231,12 +255,24 @@
 <div class="contact-links">
 
 
-<a href="https://t.me/raqeemm" target="_blank" rel="noopener">
+<a
+href="https://t.me/raqeemm"
+target="_blank"
+rel="noopener"
+>
+
+<div>
+
+<small>
+تيليجرام
+</small>
 
 <span>
 قناة رقيم
 </span>
 
+</div>
+
 <span class="arrow">
 ‹
 </span>
@@ -245,34 +281,51 @@
 
 
 
+<a
+href="https://t.me/ThewriterMustafa"
+target="_blank"
+rel="noopener"
+>
 
-<a href="https://t.me/ThewriterMustafa" target="_blank" rel="noopener">
+<div>
+
+<small>
+تواصل
+</small>
 
 <span>
-تواصل معنا
+راسلنا
 </span>
+
+</div>
 
 <span class="arrow">
 ‹
 </span>
 
 </a>
-
 
 
 
 <a href="mailto:fdm42143@gmail.com">
 
-<span>
+<div>
+
+<small>
 البريد
+</small>
+
+<span>
+البريد الإلكتروني
 </span>
+
+</div>
 
 <span class="arrow">
 ‹
 </span>
 
 </a>
-
 
 
 </div>
@@ -281,9 +334,7 @@
 </section>
 
 
-
 </main>
-
 
 
 
@@ -291,23 +342,21 @@
 <footer class="footer">
 
 
-<span>
+<div class="footer-logo">
 رقيم
-</span>
+</div>
 
 
-<span>
+<div class="footer-copy">
 © 2026
-</span>
+</div>
 
 
 </footer>
 
 
 
-
 <script type="module" src="script.js"></script>
-
 
 
 </body>
