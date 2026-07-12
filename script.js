@@ -1,365 +1,450 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<meta name="description" content="رقيم، مساحة عربية للشعر الفصيح والشعبي">
-
-<title>رقيم</title>
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+import {
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+getFirestore,
+collection,
+getDocs,
+query,
+orderBy,
+addDoc,
+serverTimestamp
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+}
 
-
-<link rel="stylesheet" href="style.css">
-
-</head>
-
-
-<body>
-
-
-<header class="header">
-
-<div class="header-inner">
-
-
-<a href="index.html" class="logo">
-رقيم
-</a>
-
-
-<nav class="nav">
-
-<a href="#texts">
-النصوص
-</a>
-
-<a href="#poets">
-الشعراء
-</a>
-
-<a href="#submit">
-أرسل قصيدتك
-</a>
-
-<a href="#about">
-من نحن
-</a>
-
-<a href="#contact">
-تواصل
-</a>
-
-
-</nav>
-
-
-</div>
-
-</header>
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
 
-<main>
+const firebaseConfig = {
+
+apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+authDomain:"raqeem-2ab23.firebaseapp.com",
+
+projectId:"raqeem-2ab23",
+
+storageBucket:"raqeem-2ab23.firebasestorage.app",
+
+messagingSenderId:"404345905166",
+
+appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
+
+};
 
 
 
-<section class="hero">
+const app = initializeApp(firebaseConfig);
 
-<h1>
-رقيم
-</h1>
+const db = getFirestore(app);
+
+
+
+
+
+// القصائد
+
+const grid = document.getElementById("poemGrid");
+
+const filterButtons = document.querySelectorAll(".filter");
+
+
+let posts = [];
+
+let currentType="all";
+
+
+
+
+function escapeHTML(value=""){
+
+const div=document.createElement("div");
+
+div.textContent=value;
+
+return div.innerHTML;
+
+}
+
+
+
+
+function renderPosts(){
+
+
+grid.innerHTML="";
+
+
+let filtered =
+currentType==="all"
+?
+posts
+:
+posts.filter(post=>post.type===currentType);
+
+
+
+if(filtered.length===0){
+
+grid.innerHTML="<p>لا توجد نصوص حالياً</p>";
+
+return;
+
+}
+
+
+
+filtered.forEach(post=>{
+
+
+grid.innerHTML += `
+
+
+<article class="card">
+
+
+<div class="card-body">
+
+
+<small>
+${escapeHTML(post.author || "رقيم")}
+</small>
+
+
+<h3>
+${escapeHTML(post.title)}
+</h3>
 
 
 <p>
-للكلمة مكان
+
+${escapeHTML(
+(post.content || "").substring(0,150)
+)}
+
+...
+
 </p>
 
 
-</section>
-
-
-
-
-
-<section class="texts" id="texts">
-
-
-<div class="section-header">
-
-
-<h2>
-النصوص
-</h2>
-
-
-<div class="filters">
-
-
-<button class="filter active" data-type="all">
-الكل
-</button>
-
-
-<button class="filter" data-type="fusha">
-فصيح
-</button>
-
-
-<button class="filter" data-type="shaabi">
-شعبي
-</button>
+<a href="post.html?id=${post.id}">
+قراءة النص ←
+</a>
 
 
 </div>
 
 
-</div>
+</article>
+
+
+`;
 
 
 
-<div id="poemGrid" class="poem-grid">
+});
 
-<p class="loading">
-جارٍ تحميل النصوص...
+
+}
+
+
+
+
+
+filterButtons.forEach(button=>{
+
+
+button.onclick=()=>{
+
+
+filterButtons.forEach(btn=>{
+
+btn.classList.remove("active");
+
+});
+
+
+button.classList.add("active");
+
+
+currentType=button.dataset.type;
+
+
+renderPosts();
+
+
+};
+
+
+});
+
+
+
+
+
+
+async function loadPosts(){
+
+
+try{
+
+
+const q=query(
+
+collection(db,"posts"),
+
+orderBy("createdAt","desc")
+
+);
+
+
+
+const snap=await getDocs(q);
+
+
+
+posts=snap.docs.map(doc=>({
+
+id:doc.id,
+
+...doc.data()
+
+}));
+
+
+
+renderPosts();
+
+
+}
+
+catch(e){
+
+console.log(e);
+
+grid.innerHTML="تعذر تحميل النصوص";
+
+}
+
+
+}
+
+
+
+loadPosts();
+
+
+
+
+
+
+
+// الشعراء
+
+
+const poetsGrid=document.getElementById("poetsGrid");
+
+
+
+async function loadPoets(){
+
+
+if(!poetsGrid) return;
+
+
+
+poetsGrid.innerHTML="";
+
+
+
+const snap=await getDocs(
+
+collection(db,"poets")
+
+);
+
+
+
+if(snap.empty){
+
+poetsGrid.innerHTML=
+"<p>لا يوجد شعراء حالياً</p>";
+
+return;
+
+}
+
+
+
+snap.forEach(doc=>{
+
+
+const poet=doc.data();
+
+
+
+poetsGrid.innerHTML += `
+
+
+<article class="card">
+
+
+<h3>
+
+${escapeHTML(poet.name)}
+
+</h3>
+
+
+<p>
+
+${escapeHTML(poet.style || "")}
+
 </p>
 
 
-</div>
 
+<a href="poet.html?id=${doc.id}">
 
-
-</section>
-
-
-
-
-
-<section class="poets" id="poets">
-
-
-<div class="section-header">
-
-<h2>
-الشعراء
-</h2>
-
-
-</div>
-
-
-<div id="poetsGrid" class="poem-grid">
-
-
-<p class="loading">
-جارٍ تحميل الشعراء...
-</p>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-<section class="submit-poem" id="submit">
-
-
-<p class="label">
-شاركنا
-</p>
-
-
-<h2>
-أرسل قصيدتك
-</h2>
-
-
-<p class="about-text">
-أرسل نصك وسيتم مراجعته قبل النشر.
-</p>
-
-
-
-<input id="senderName" placeholder="اسم الشاعر">
-
-
-
-<input id="poemTitle" placeholder="عنوان القصيدة">
-
-
-
-<select id="poemType">
-
-
-<option value="fusha">
-فصيح
-</option>
-
-
-<option value="shaabi">
-شعبي
-</option>
-
-
-</select>
-
-
-
-<textarea id="poemContent" placeholder="اكتب القصيدة"></textarea>
-
-
-
-<button id="sendPoem">
-إرسال للمراجعة
-</button>
-
-
-
-<p id="sendMessage"></p>
-
-
-
-</section>
-
-
-
-
-
-<section class="about" id="about">
-
-
-<p class="label">
-من نحن
-</p>
-
-
-<h2>
-مساحة للكلمة
-</h2>
-
-
-<p class="about-text">
-
-رقيم مساحة أدبية للنصوص الشعرية
-الفصيحة والشعبية. مكان هادئ للكلمة،
-بعيد عن الضجيج.
-
-</p>
-
-
-</section>
-
-
-
-
-
-
-<section class="contact" id="contact">
-
-
-<p class="label">
-تواصل
-</p>
-
-
-<h2>
-ابقَ قريبًا
-</h2>
-
-
-
-<div class="contact-links">
-
-
-<a href="https://t.me/raqeemm" target="_blank">
-
-<span>
-قناة رقيم
-</span>
-
-<span class="arrow">
-‹
-</span>
+صفحة الشاعر ←
 
 </a>
 
 
 
-<a href="https://t.me/ThewriterMustafa" target="_blank">
-
-<span>
-تواصل معنا
-</span>
-
-<span class="arrow">
-‹
-</span>
-
-</a>
+</article>
 
 
 
-<a href="mailto:fdm42143@gmail.com">
-
-<span>
-البريد
-</span>
-
-<span class="arrow">
-‹
-</span>
-
-</a>
+`;
 
 
 
-</div>
+});
 
 
-</section>
+}
 
 
 
-</main>
+loadPoets();
 
 
 
 
-<footer class="footer">
-
-
-<span>
-رقيم
-</span>
-
-
-<span>
-© 2026
-</span>
-
-
-</footer>
 
 
 
-<script type="module" src="script.js"></script>
+// إرسال القصائد للمراجعة
+
+
+const sendPoem=document.getElementById("sendPoem");
 
 
 
-</body>
+if(sendPoem){
 
-</html>
+
+sendPoem.onclick=async()=>{
+
+
+const name=
+document.getElementById("senderName").value.trim();
+
+
+const title=
+document.getElementById("poemTitle").value.trim();
+
+
+const type=
+document.getElementById("poemType").value;
+
+
+const content=
+document.getElementById("poemContent").value.trim();
+
+
+
+const message=
+document.getElementById("sendMessage");
+
+
+
+if(!name || !title || !content){
+
+
+message.innerHTML=
+"أكمل جميع الحقول";
+
+
+return;
+
+}
+
+
+
+
+try{
+
+
+await addDoc(
+
+collection(db,"pendingPosts"),
+
+{
+
+
+author:name,
+
+title:title,
+
+type:type,
+
+content:content,
+
+status:"pending",
+
+createdAt:serverTimestamp()
+
+
+}
+
+);
+
+
+
+message.innerHTML=
+"تم إرسال القصيدة للمراجعة";
+
+
+
+document.getElementById("senderName").value="";
+
+document.getElementById("poemTitle").value="";
+
+document.getElementById("poemContent").value="";
+
+
+
+}
+
+catch(e){
+
+
+console.log(e);
+
+
+message.innerHTML=
+"حدث خطأ أثناء الإرسال";
+
+
+}
+
+
+
+};
+
+
+}
