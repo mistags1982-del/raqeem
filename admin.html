@@ -1,323 +1,175 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>إدارة رقيم</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
-
-<style>
-
-*{
-box-sizing:border-box;
-}
-
-body{
-margin:0;
-background:#f7f7f5;
-color:#1c1c1e;
-font-family:"Noto Sans Arabic",sans-serif;
-}
-
-.container{
-width:min(950px,92%);
-margin:40px auto;
-}
-
-.brand{
-text-align:center;
-margin-bottom:30px;
-}
-
-.brand h1{
-font-size:42px;
-margin:0;
-}
-
-.brand p{
-color:#777;
-}
-
-.card{
-background:#fff;
-border-radius:20px;
-padding:25px;
-margin-bottom:20px;
-border:1px solid #eee;
-}
-
-input,textarea,select{
-width:100%;
-padding:14px;
-margin-bottom:15px;
-border:1px solid #ddd;
-border-radius:12px;
-font-family:inherit;
-font-size:16px;
-}
-
-textarea{
-min-height:220px;
-line-height:2;
-}
-
-button{
-width:100%;
-padding:14px;
-border:0;
-border-radius:12px;
-background:#111;
-color:white;
-font-family:inherit;
-cursor:pointer;
-}
-
-.small-btn{
-width:auto;
-}
-
-.gray{
-background:#eee;
-color:#111;
-}
-
-.red{
-background:#c62828;
-}
-
-.blue{
-background:#2563eb;
-}
-
-.hidden{
-display:none;
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.tabs{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-margin-top:20px;
-}
-
-.tabs button{
-flex:1;
-min-width:120px;
-}
-
-.item{
-border:1px solid #eee;
-padding:18px;
-border-radius:15px;
-margin-top:12px;
-}
-
-.actions{
-display:flex;
-gap:10px;
-margin-top:15px;
-}
-
-.message{
-text-align:center;
-color:#777;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="brand">
-<h1>رقيم</h1>
-<p>لوحة إدارة المحتوى</p>
-</div>
-
-
-<div id="loginBox" class="card">
-
-<input id="email" type="email" placeholder="البريد الإلكتروني">
-
-<input id="password" type="password" placeholder="كلمة المرور">
-
-<button id="loginBtn">
-دخول
-</button>
-
-<p id="loginMessage" class="message"></p>
-
-</div>
-
-
-
-<div id="adminBox" class="hidden">
-
-
-<div class="card">
-
-<div class="top">
-
-<b>إدارة رقيم</b>
-
-<button id="logoutBtn" class="gray small-btn">
-خروج
-</button>
-
-</div>
-
-
-<div class="tabs">
-
-<button id="showPublish">
-نشر قصيدة
-</button>
-
-<button id="showPosts">
-القصائد
-</button>
-
-<button id="showPoets">
-الشعراء
-</button>
-
-<button id="showSettings">
-الإعدادات
-</button>
-
-</div>
-
-</div>
-
-
-
-<div id="publishBox" class="card">
-
-<h2>نشر قصيدة</h2>
-
-<input id="title" placeholder="عنوان القصيدة">
-
-
-<select id="poetSelect">
-
-<option value="">
-اختر الشاعر
-</option>
-
-</select>
-
-
-<select id="type">
-
-<option value="fusha">
-فصيح
-</option>
-
-<option value="shaabi">
-شعبي
-</option>
-
-</select>
-
-
-<textarea id="content" placeholder="اكتب القصيدة"></textarea>
-
-
-<button id="publishBtn">
-نشر
-</button>
-
-
-<p id="publishMessage" class="message"></p>
-
-</div>
-
-
-
-<div id="postsBox" class="card hidden">
-
-<h2>القصائد</h2>
-
-<div id="postsList"></div>
-
-</div>
-
-
-<div id="poetsBox" class="card hidden">
-
-<h2>الشعراء</h2>
-
-<input id="poetName" placeholder="اسم الشاعر">
-
-<textarea id="poetBio" placeholder="نبذة عن حياة الشاعر"></textarea>
-
-<input id="poetStyle" placeholder="الأسلوب الشعري">
-
-
-<button id="addPoetBtn">
-إضافة شاعر
-</button>
-
-
-<p id="poetMessage" class="message"></p>
-
-
-<div id="poetsList"></div>
-
-</div>
-<div id="settingsBox" class="card hidden">
-
-<h2>الإعدادات</h2>
-
-<input id="siteName" placeholder="اسم الموقع">
-
-<input id="siteDesc" placeholder="وصف الموقع">
-
-<input id="channelLink" placeholder="رابط القناة">
-
-<input id="contactEmail" placeholder="البريد">
-
-<button id="saveSettings">
-حفظ الإعدادات
-</button>
-
-<p id="settingsMessage" class="message"></p>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<script type="module">
-
-import { initializeApp }
+<!DOCTYPE html>  <html lang="ar" dir="rtl">  
+<head>  <meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1">  <title>لوحة إدارة رقيم</title>  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">  <style>  
+  
+*{  
+box-sizing:border-box;  
+}  
+  
+body{  
+margin:0;  
+background:#f7f7f5;  
+color:#1c1c1e;  
+font-family:"Noto Sans Arabic",sans-serif;  
+}  
+  
+.container{  
+width:min(950px,92%);  
+margin:40px auto;  
+}  
+  
+.brand{  
+text-align:center;  
+margin-bottom:30px;  
+}  
+  
+.brand h1{  
+font-size:42px;  
+margin:0;  
+}  
+  
+.brand p{  
+color:#777;  
+}  
+  
+.card{  
+background:#fff;  
+border:1px solid #eee;  
+border-radius:20px;  
+padding:25px;  
+margin-bottom:20px;  
+}  
+  
+input,  
+textarea,  
+select{  
+width:100%;  
+padding:14px;  
+margin-bottom:15px;  
+border:1px solid #ddd;  
+border-radius:12px;  
+font-family:inherit;  
+font-size:16px;  
+}  
+  
+textarea{  
+min-height:260px;  
+line-height:2;  
+}  
+  
+button{  
+padding:13px 20px;  
+border:0;  
+border-radius:12px;  
+background:#111;  
+color:white;  
+font-family:inherit;  
+cursor:pointer;  
+}  
+  
+.full{  
+width:100%;  
+}  
+  
+.gray{  
+background:#eee;  
+color:#111;  
+}  
+  
+.red{  
+background:#c62828;  
+}  
+  
+.blue{  
+background:#2563eb;  
+}  
+  
+.hidden{  
+display:none;  
+}  
+  
+.top{  
+display:flex;  
+justify-content:space-between;  
+align-items:center;  
+}  
+  
+.tabs{  
+display:flex;  
+gap:10px;  
+margin-top:20px;  
+}  
+  
+.tabs button{  
+flex:1;  
+}  
+  
+.active{  
+background:#111;  
+color:white;  
+}  
+  
+.item{  
+border:1px solid #eee;  
+border-radius:15px;  
+padding:18px;  
+margin-top:12px;  
+}  
+  
+.actions{  
+display:flex;  
+gap:10px;  
+margin-top:15px;  
+}  
+  
+.message{  
+text-align:center;  
+color:#777;  
+}  
+  
+</style>  </head>  <body>  <div class="container">  <div class="brand">  <h1>رقيم</h1>  <p>لوحة إدارة المحتوى</p>  </div>  <div id="loginBox" class="card">  <input id="email" type="email" placeholder="البريد الإلكتروني">  <input id="password" type="password" placeholder="كلمة المرور">  <button id="loginBtn" class="full">  
+دخول  
+</button>  <p id="loginMessage" class="message"></p>  </div>  <div id="adminBox" class="hidden">  <div class="card">  <div class="top">  <strong>  
+إدارة رقيم  
+</strong>  <button id="logoutBtn" class="gray">  
+خروج  
+</button>  </div>  <div class="tabs">  <button id="showPublish" class="active">  
+نشر  
+</button>  <button id="showPosts">  
+النصوص  
+</button>  <button id="showSettings">  
+الإعدادات  
+</button>  </div>  </div>  <div id="publishBox" class="card">  <h2>  
+نشر قصيدة  
+</h2>  <input id="title" placeholder="عنوان القصيدة">  <input id="author" placeholder="اسم الكاتب">  <select id="type">  <option value="fusha">  
+فصيح  
+</option>  <option value="shaabi">  
+شعبي  
+</option>  </select>  <textarea id="content" placeholder="اكتب القصيدة"></textarea>  <button id="publishBtn" class="full">  
+نشر  
+</button>  <p id="publishMessage" class="message"></p>  </div>  <div id="postsBox" class="card hidden">  <h2>  
+النصوص المنشورة  
+</h2>  <div id="postsList"></div>  </div>  <div id="settingsBox" class="card hidden">  <h2>  
+إعدادات الموقع  
+</h2>  <input id="siteName" placeholder="اسم الموقع">  <input id="siteDesc" placeholder="وصف الموقع">  <input id="channelLink" placeholder="رابط القناة">  <input id="contactEmail" placeholder="البريد">  <button id="saveSettings" class="full">  
+حفظ الإعدادات  
+</button>  <p id="settingsMessage" class="message"></p>  </div>  </div>  </div>  
+<script type="module">  import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
-
 import {
+
 getAuth,
 signInWithEmailAndPassword,
 signOut,
 onAuthStateChanged
+
 }
+
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
-
 import {
+
 getFirestore,
 collection,
 addDoc,
@@ -328,10 +180,10 @@ doc,
 setDoc,
 getDoc,
 serverTimestamp
+
 }
+
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-
-
 
 const firebaseConfig = {
 
@@ -349,60 +201,41 @@ appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
 
 };
 
-
-
 const app=initializeApp(firebaseConfig);
 
 const auth=getAuth(app);
 
 const db=getFirestore(app);
 
-
 const ADMIN_EMAIL="fdm42143@gmail.com";
 
-
-// العناصر
-
-const loginBtn=document.getElementById("loginBtn");
-const loginMessage=document.getElementById("loginMessage");
-
-const emailInput=document.getElementById("email");
-const passwordInput=document.getElementById("password");
-
 const loginBox=document.getElementById("loginBox");
+
 const adminBox=document.getElementById("adminBox");
-
-const logoutBtn=document.getElementById("logoutBtn");
-
-
-
-// تسجيل الدخول
 
 loginBtn.onclick=async()=>{
 
 try{
 
 await signInWithEmailAndPassword(
+
 auth,
-emailInput.value.trim(),
-passwordInput.value
+
+email.value.trim(),
+
+password.value
+
 );
 
 }
 
-catch(error){
+catch(e){
 
-console.log(error);
-
-loginMessage.textContent=error.message;
+loginMessage.textContent="خطأ في تسجيل الدخول";
 
 }
 
 };
-
-
-
-// خروج
 
 logoutBtn.onclick=()=>{
 
@@ -410,181 +243,37 @@ signOut(auth);
 
 };
 
-
-
-// التحقق
-
 onAuthStateChanged(auth,user=>{
 
-
 if(user && user.email===ADMIN_EMAIL){
-
 
 loginBox.classList.add("hidden");
 
 adminBox.classList.remove("hidden");
 
-
-loadPoets();
-
 loadPosts();
 
 loadSettings();
-
 
 }
 
 else{
 
-
 loginBox.classList.remove("hidden");
 
 adminBox.classList.add("hidden");
 
-
 }
 
 });
-
-
-// إضافة شاعر
-
-addPoetBtn.onclick=async()=>{
-
-
-await addDoc(
-
-collection(db,"poets"),
-
-{
-
-name:poetName.value,
-
-bio:poetBio.value,
-
-style:poetStyle.value,
-
-createdAt:serverTimestamp()
-
-}
-
-);
-
-
-poetMessage.textContent="تمت إضافة الشاعر";
-
-
-poetName.value="";
-
-poetBio.value="";
-
-poetStyle.value="";
-
-
-loadPoets();
-
-
-};
-
-
-
-// جلب الشعراء
-
-async function loadPoets(){
-
-
-poetSelect.innerHTML=
-"<option value=''>اختر الشاعر</option>";
-
-
-poetsList.innerHTML="";
-
-
-const snap=await getDocs(collection(db,"poets"));
-
-
-snap.forEach(p=>{
-
-
-let d=p.data();
-
-
-poetSelect.innerHTML+=`
-
-<option value="${p.id}">
-${d.name}
-</option>
-
-`;
-
-
-poetsList.innerHTML+=`
-
-<div class="item">
-
-<h3>${d.name}</h3>
-
-<p>${d.bio || ""}</p>
-
-<p>${d.style || ""}</p>
-
-
-<button class="red"
-onclick="deletePoet('${p.id}')">
-حذف
-</button>
-
-</div>
-
-`;
-
-});
-
-
-}
-
-
-
-window.deletePoet=async(id)=>{
-
-
-await deleteDoc(doc(db,"poets",id));
-
-loadPoets();
-
-};
-  // نشر القصيدة
 
 publishBtn.onclick=async()=>{
 
-
-if(!title.value || !content.value || !poetSelect.value){
-
-publishMessage.textContent="أكمل جميع الحقول";
-
-return;
-
-}
-
-
-
-const poetSnap = await getDoc(
-doc(db,"poets",poetSelect.value)
-);
-
-
-
-await addDoc(
-
-collection(db,"posts"),
-
-{
+const data={
 
 title:title.value.trim(),
 
-author:poetSnap.data().name,
-
-poetId:poetSelect.value,
+author:author.value.trim(),
 
 type:type.value,
 
@@ -592,111 +281,96 @@ content:content.value.trim(),
 
 createdAt:serverTimestamp()
 
+};
+
+if(!data.title || !data.author || !data.content){
+
+publishMessage.textContent="أكمل جميع الحقول";
+
+return;
+
 }
 
+try{
+
+await addDoc(
+
+collection(db,"posts"),
+
+data
+
 );
-
-
 
 publishMessage.textContent="تم النشر بنجاح";
 
-
 title.value="";
+
+author.value="";
 
 content.value="";
 
-
 loadPosts();
-
-
-};
-
-
-
-
-
-// عرض القصائد
-
-async function loadPosts(){
-
-
-postsList.innerHTML="";
-
-
-const snap=await getDocs(collection(db,"posts"));
-
-
-
-snap.forEach(p=>{
-
-
-let d=p.data();
-
-
-
-postsList.innerHTML+=`
-
-<div class="item">
-
-<h3>${d.title}</h3>
-
-<p>${d.author || ""}</p>
-
-<p>${d.type==="fusha"?"فصيح":"شعبي"}</p>
-
-
-<div class="actions">
-
-<button class="red"
-onclick="deletePost('${p.id}')">
-حذف
-</button>
-
-
-<button class="blue"
-onclick="editPost('${p.id}')">
-تعديل
-</button>
-
-</div>
-
-
-</div>
-
-`;
-
-});
-
 
 }
 
+catch(error){
 
+console.log(error);
 
-window.deletePost=async(id)=>{
+publishMessage.textContent="حدث خطأ أثناء النشر";
 
-
-await deleteDoc(
-doc(db,"posts",id)
-);
-
-
-loadPosts();
-
+}
 
 };
 
+async function loadPosts(){
 
+postsList.innerHTML="";
 
+const snap=await getDocs(collection(db,"posts"));
 
+snap.forEach(item=>{
+
+const p=item.data();
+
+let typeName =
+p.type==="fusha" ? "فصيح" : "شعبي";
+
+postsList.innerHTML+=`
+
+<div class="item">  <h3>${p.title}</h3>  <p>${p.author}</p>  <p>${typeName}</p>  <div class="actions">  <button class="red"  
+onclick="deletePost('${item.id}')">
+
+حذف
+
+</button>  <button class="blue"  
+onclick="editPost('${item.id}')">
+
+تعديل
+
+</button>  </div>  </div>  `;
+
+});
+
+}
+
+window.deletePost=async(id)=>{
+
+await deleteDoc(
+
+doc(db,"posts",id)
+
+);
+
+loadPosts();
+
+};
 
 window.editPost=async(id)=>{
 
+const titleNew=prompt("العنوان الجديد");
 
-let newTitle=prompt("العنوان الجديد");
-
-
-if(!newTitle)return;
-
+if(!titleNew)return;
 
 await updateDoc(
 
@@ -704,28 +378,17 @@ doc(db,"posts",id),
 
 {
 
-title:newTitle
+title:titleNew
 
 }
 
 );
 
-
 loadPosts();
-
 
 };
 
-
-
-
-
-
-
-// الإعدادات
-
 saveSettings.onclick=async()=>{
-
 
 await setDoc(
 
@@ -745,54 +408,33 @@ email:contactEmail.value
 
 );
 
-
-
 settingsMessage.textContent="تم حفظ الإعدادات";
-
 
 };
 
-
-
-
 async function loadSettings(){
 
-
-const s=await getDoc(
+const snap=await getDoc(
 
 doc(db,"settings","main")
 
 );
 
+if(snap.exists()){
 
+const s=snap.data();
 
-if(s.exists()){
+siteName.value=s.name || "";
 
+siteDesc.value=s.description || "";
 
-let d=s.data();
+channelLink.value=s.channel || "";
 
-
-siteName.value=d.name || "";
-
-siteDesc.value=d.description || "";
-
-channelLink.value=d.channel || "";
-
-contactEmail.value=d.email || "";
-
+contactEmail.value=s.email || "";
 
 }
 
-
 }
-
-
-
-
-
-
-// التنقل بين الأقسام
-
 
 showPublish.onclick=()=>{
 
@@ -800,13 +442,9 @@ publishBox.classList.remove("hidden");
 
 postsBox.classList.add("hidden");
 
-poetsBox.classList.add("hidden");
-
 settingsBox.classList.add("hidden");
 
 };
-
-
 
 showPosts.onclick=()=>{
 
@@ -814,31 +452,11 @@ publishBox.classList.add("hidden");
 
 postsBox.classList.remove("hidden");
 
-poetsBox.classList.add("hidden");
-
 settingsBox.classList.add("hidden");
 
 loadPosts();
 
 };
-
-
-
-showPoets.onclick=()=>{
-
-publishBox.classList.add("hidden");
-
-postsBox.classList.add("hidden");
-
-poetsBox.classList.remove("hidden");
-
-settingsBox.classList.add("hidden");
-
-loadPoets();
-
-};
-
-
 
 showSettings.onclick=()=>{
 
@@ -846,18 +464,8 @@ publishBox.classList.add("hidden");
 
 postsBox.classList.add("hidden");
 
-poetsBox.classList.add("hidden");
-
 settingsBox.classList.remove("hidden");
-
-loadSettings();
 
 };
 
-
-
-</script>
-
-</body>
-
-</html>
+</script>  </body>  </html>
