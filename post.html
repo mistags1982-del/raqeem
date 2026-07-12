@@ -7,8 +7,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>رقيم</title>
+<link id="canonicalLink" rel="canonical" href="">
 
+<title>رقيم</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -16,201 +17,134 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-
 <style>
 
 @font-face {
-
   font-family: "AmiriLocal";
-
-  src: url("alfont_com_Amiri-Regular.ttf")
-  format("truetype");
-
+  src: url("alfont_com_Amiri-Regular.ttf") format("truetype");
   font-weight: normal;
-
   font-style: normal;
-
   font-display: swap;
-
 }
-
-
 
 * {
-
   box-sizing: border-box;
-
 }
-
-
 
 body {
-
   margin: 0;
-
   background: #f7f7f5;
-
   color: #1c1c1e;
-
-  font-family:
-  "Noto Sans Arabic",
-  sans-serif;
-
+  font-family: "Noto Sans Arabic", sans-serif;
 }
-
-
 
 .page {
-
   width: min(760px, 90%);
-
   margin: auto;
-
   padding: 35px 0 100px;
-
 }
-
-
 
 .back {
-
   display: inline-block;
-
   margin-bottom: 45px;
-
   color: #8e8e93;
-
   text-decoration: none;
-
   font-size: 14px;
-
 }
-
-
 
 article {
-
   background: #fff;
-
   border-radius: 22px;
-
   padding: 45px;
-
-  box-shadow:
-  0 5px 25px rgba(0,0,0,.04);
-
+  box-shadow: 0 5px 25px rgba(0,0,0,.04);
 }
-
-
 
 .title {
-
   margin: 0;
-
   font-size: 40px;
-
   font-weight: 700;
-
   line-height: 1.6;
-
   letter-spacing: -0.5px;
-
 }
-
-
 
 .author {
-
   margin-top: 14px;
-
   margin-bottom: 45px;
-
   color: #6e6e73;
-
   font-size: 16px;
-
   font-weight: 600;
-
 }
-
-
 
 .content {
-
   font-family: "AmiriLocal", serif;
-
   font-size: 32px;
-
   line-height: 2.35;
-
   white-space: pre-wrap;
-
   color: #111;
-
 }
-
-
 
 .message {
-
   text-align: center;
-
   color: #999;
-
   padding: 80px 0;
-
 }
 
+
+/* التعليقات */
+
+.comments {
+  margin-top: 35px;
+  background: #fff;
+  border-radius: 22px;
+  padding: 35px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.04);
+}
+
+.comments-title {
+  margin: 0 0 25px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+#telegramComments {
+  min-height: 100px;
+}
 
 
 @media(max-width:600px){
 
-
 .page {
-
   width: 92%;
-
 }
-
-
 
 article {
-
   padding: 30px 22px;
-
   border-radius: 18px;
-
 }
-
-
 
 .title {
-
   font-size: 32px;
-
 }
-
-
 
 .author {
-
   font-size: 15px;
-
 }
-
-
 
 .content {
-
   font-size: 26px;
-
   line-height: 2.2;
-
 }
 
-
+.comments {
+  padding: 25px 18px;
+  border-radius: 18px;
 }
 
+.comments-title {
+  font-size: 21px;
+}
+
+}
 
 </style>
 
@@ -237,167 +171,6 @@ article {
 </div>
 
 
-</div>
+<div id="commentsBox" class="comments" style="display:none;">
 
-
-
-<script type="module">
-
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-
-
-import {
-
-getFirestore,
-
-doc,
-
-getDoc
-
-}
-
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
-
-
-
-const firebaseConfig = {
-
-apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
-
-authDomain:"raqeem-2ab23.firebaseapp.com",
-
-projectId:"raqeem-2ab23",
-
-storageBucket:"raqeem-2ab23.firebasestorage.app",
-
-messagingSenderId:"404345905166",
-
-appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
-
-};
-
-
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-
-const postBox = document.getElementById("post");
-
-
-const id =
-new URLSearchParams(location.search).get("id");
-
-
-
-function safe(text="") {
-
-return text
-
-.replace(/&/g,"&amp;")
-
-.replace(/</g,"&lt;")
-
-.replace(/>/g,"&gt;");
-
-}
-
-
-
-async function loadPost(){
-
-
-if(!id){
-
-postBox.innerHTML =
-"<p class='message'>النص غير موجود</p>";
-
-return;
-
-}
-
-
-
-try {
-
-
-const snap =
-await getDoc(
-doc(db,"posts",id)
-);
-
-
-
-if(!snap.exists()){
-
-postBox.innerHTML =
-"<p class='message'>النص غير موجود</p>";
-
-return;
-
-}
-
-
-
-const data = snap.data();
-
-
-
-document.title =
-(data.title || "رقيم") + " | رقيم";
-
-
-
-postBox.innerHTML = `
-
-<article>
-
-<h1 class="title">
-${safe(data.title || "بلا عنوان")}
-</h1>
-
-
-<div class="author">
-بقلم ${safe(data.author || "رقيم")}
-</div>
-
-
-<div class="content">
-${safe(data.content || "")}
-</div>
-
-
-</article>
-
-`;
-
-
-
-}
-
-catch(error){
-
-console.error(error);
-
-postBox.innerHTML =
-"<p class='message'>حدث خطأ أثناء التحميل</p>";
-
-}
-
-
-}
-
-
-
-loadPost();
-
-
-</script>
-
-
-</body>
-
-</html>
+<h
