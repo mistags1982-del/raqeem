@@ -1,385 +1,247 @@
 import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
 .then(async ({ initializeApp }) => {
 
-  const {
-    getFirestore,
-    collection,
-    getDocs,
-    query,
-    orderBy
-  } = await import(
-    "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js"
-  );
+const {
+getFirestore,
+collection,
+getDocs,
+query,
+orderBy
+} = await import(
+"https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js"
+);
 
 
-  const firebaseConfig = {
+const firebaseConfig = {
 
-    apiKey: "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
 
-    authDomain: "raqeem-2ab23.firebaseapp.com",
+authDomain:"raqeem-2ab23.firebaseapp.com",
 
-    projectId: "raqeem-2ab23",
+projectId:"raqeem-2ab23",
 
-    storageBucket: "raqeem-2ab23.firebasestorage.app",
+storageBucket:"raqeem-2ab23.firebasestorage.app",
 
-    messagingSenderId: "404345905166",
+messagingSenderId:"404345905166",
 
-    appId: "1:404345905166:web:3809b83c0e56c1a6781c5f"
+appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
 
-  };
+};
 
 
-  const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-  const db = getFirestore(app);
+const db = getFirestore(app);
 
 
 
-  const grid = document.getElementById("poemGrid");
+const grid = document.getElementById("poemGrid");
 
-  const poetsGrid = document.getElementById("poetsGrid");
+const poetsGrid = document.getElementById("poetsGrid");
 
-  const filterButtons = document.querySelectorAll(".filter");
 
 
+function escapeHTML(text=""){
 
-  let posts = [];
+const div=document.createElement("div");
 
-  let currentType = "all";
+div.textContent=text;
 
+return div.innerHTML;
 
+}
 
 
-  function escapeHTML(value = "") {
 
-    const div = document.createElement("div");
+// تحميل الشعراء
 
-    div.textContent = value;
+async function loadPoets(){
 
-    return div.innerHTML;
+if(!poetsGrid) return;
 
-  }
 
+try{
 
 
+const snap = await getDocs(
+collection(db,"poets")
+);
 
 
-  function renderPosts() {
 
+poetsGrid.innerHTML="";
 
-    if(!grid) return;
 
 
-    grid.innerHTML = "";
+if(snap.empty){
 
+poetsGrid.innerHTML="<p>لا يوجد شعراء حالياً</p>";
 
-    const filteredPosts = currentType === "all"
+return;
 
-      ? posts
+}
 
-      : posts.filter(post => post.type === currentType);
 
 
+snap.forEach(item=>{
 
-    if(filteredPosts.length === 0){
 
-      grid.innerHTML =
-      "<p>لا توجد نصوص في هذا القسم.</p>";
+const poet=item.data();
 
-      return;
 
-    }
 
+poetsGrid.innerHTML += `
 
+<article class="card">
 
+<div class="card-body">
 
-    filteredPosts.forEach(post=>{
+<h3>
+${escapeHTML(poet.name)}
+</h3>
 
+<p>
+${escapeHTML(poet.style || "")}
+</p>
 
-      const article = document.createElement("article");
 
+<a href="poet.html?name=${encodeURIComponent(poet.name)}">
 
-      article.className = "card";
+صفحة الشاعر ←
 
+</a>
 
+</div>
 
-      const content = post.content || "";
+</article>
 
+`;
 
+});
 
-      const excerpt = content.length > 150
 
-      ? content.substring(0,150) + "..."
+}
 
-      : content;
+catch(error){
 
+console.log(error);
 
+poetsGrid.innerHTML="<p>خطأ في تحميل الشعراء</p>";
 
+}
 
-      article.innerHTML = `
 
+}
 
-      <div class="card-body">
 
 
-      <small>
 
-      ${escapeHTML(post.author || "رقيم")}
+// تحميل القصائد
 
-      </small>
+async function loadPosts(){
 
 
+if(!grid) return;
 
-      <h3>
 
-      ${escapeHTML(post.title || "بلا عنوان")}
+try{
 
-      </h3>
 
+const q=query(
 
+collection(db,"posts"),
 
-      <p>
+orderBy("createdAt","desc")
 
-      ${escapeHTML(excerpt)}
+);
 
-      </p>
 
 
+const snap=await getDocs(q);
 
-      <a href="post.html?id=${post.id}">
 
-      قراءة النص ←
+grid.innerHTML="";
 
-      </a>
 
+snap.forEach(item=>{
 
 
-      </div>
+const post=item.data();
 
 
-      `;
 
+grid.innerHTML += `
 
 
-      grid.appendChild(article);
+<article class="card">
 
 
+<div class="card-body">
 
-    });
 
+<small>
 
-  }
+${escapeHTML(post.author || "رقيم")}
 
+</small>
 
 
+<h3>
 
+${escapeHTML(post.title)}
 
+</h3>
 
-  filterButtons.forEach(button=>{
 
+<p>
 
-    button.addEventListener("click",()=>{
+${escapeHTML(
+(post.content || "").substring(0,150)
+)}
 
+</p>
 
-      filterButtons.forEach(btn=>{
 
-        btn.classList.remove("active");
+<a href="post.html?id=${item.id}">
 
-      });
+قراءة النص ←
 
+</a>
 
 
-      button.classList.add("active");
+</div>
 
 
+</article>
 
-      currentType = button.dataset.type;
 
+`;
 
 
-      renderPosts();
+});
 
 
+}
 
-    });
 
+catch(error){
 
+console.log(error);
 
-  });
+grid.innerHTML="<p>تعذر تحميل النصوص</p>";
 
+}
 
 
+}
 
 
 
-  async function loadPoets(){
 
 
-    if(!poetsGrid) return;
+loadPosts();
 
-
-    poetsGrid.innerHTML="";
-
-
-
-    try{
-
-
-      const snapshot = await getDocs(
-
-        collection(db,"poets")
-
-      );
-
-
-
-      if(snapshot.empty){
-
-
-        poetsGrid.innerHTML =
-
-        "<p>لا يوجد شعراء حالياً.</p>";
-
-        return;
-
-
-      }
-
-
-
-
-
-      snapshot.forEach(doc=>{
-
-
-        const poet = doc.data();
-
-
-
-        poetsGrid.innerHTML += `
-
-
-        <article class="card">
-
-
-        <div class="card-body">
-
-
-        <h3>
-
-        ${escapeHTML(poet.name || "")}
-
-        </h3>
-
-
-
-        <p>
-
-        ${escapeHTML(poet.style || "")}
-
-        </p>
-
-
-
-        <a href="poet.html?name=${encodeURIComponent(poet.name)}">
-
-        صفحة الشاعر ←
-
-        </a>
-
-
-
-        </div>
-
-
-        </article>
-
-
-        `;
-
-
-
-      });
-
-
-
-    }catch(error){
-
-
-      console.error(error);
-
-
-      poetsGrid.innerHTML =
-
-      "<p>تعذر تحميل الشعراء.</p>";
-
-
-    }
-
-
-  }
-
-
-
-
-
-
-
-  try {
-
-
-
-    const postsQuery = query(
-
-      collection(db,"posts"),
-
-      orderBy("createdAt","desc")
-
-    );
-
-
-
-    const snapshot = await getDocs(postsQuery);
-
-
-
-    posts = snapshot.docs.map(documentSnapshot=>({
-
-      id: documentSnapshot.id,
-
-      ...documentSnapshot.data()
-
-    }));
-
-
-
-    renderPosts();
-
-
-
-  }catch(error){
-
-
-
-    console.error(error);
-
-
-
-    if(grid){
-
-      grid.innerHTML =
-      "<p>تعذر تحميل النصوص.</p>";
-
-    }
-
-
-  }
-
-
-
-
-  loadPoets();
-
+loadPoets();
 
 
 });
