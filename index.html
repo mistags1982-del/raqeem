@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>رُقيم | مجلة شعرية عربية</title>
+<meta name="description" content="رُقيم، مجلة شعرية عربية للفصيح والشعبي.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Kufi+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="index.html">رُقيم</a>
+    <nav><a href="#poems">القصائد</a><a href="#about">من نحن</a><a href="#contact">تواصل</a></nav>
+  </div>
+</header>
+
+<main>
+<section class="hero wrap">
+  <span>مجلة شعرية عربية</span>
+  <h1>الكلمة،<br>كما ينبغي أن تُقرأ.</h1>
+  <p>مساحة هادئة للشعر الفصيح والشعبي، وللنصوص التي تستحق أن تبقى.</p>
+  <a class="button" href="#poems">اقرأ القصائد</a>
+</section>
+
+<section class="wrap section" id="poems">
+  <div class="section-head"><h2>أحدث القصائد</h2><div class="filters">
+    <button class="active" data-filter="all">الكل</button>
+    <button data-filter="فصيح">الفصيح</button>
+    <button data-filter="شعبي">الشعبي</button>
+  </div></div>
+  <div class="grid" id="poemGrid"></div>
+</section>
+
+<section class="about" id="about"><div class="wrap narrow">
+  <span>من نحن</span><h2>مجلة رُقيم</h2>
+  <p>الشعرُ هو لغةُ الروح حين تعجزُ الحروفُ العاديةُ عن وصفِ الشعور. وُلدت رُقيم لتكون مساحة لكل ذائقة تبحث عن جمال الفصيح وصدق الشعبي.</p>
+  <p>هنا لا ننشر نصوصاً فحسب، بل نحتفي بالكلمة التي تلامس الوجدان، ونقدّم القصيدة في حلة بصرية تليق بوقار الشعر.</p>
+</div></section>
+
+<section class="wrap section contact" id="contact">
+  <span>تواصل معنا</span><h2>أبواب رُقيم مفتوحة للكلمة.</h2>
+  <div class="contact-links">
+    <a href="https://t.me/raqeemm" target="_blank" rel="noopener"><b>قناة رُقيم</b><small>@raqeemm</small></a>
+    <a href="https://t.me/ThewriterMustafa" target="_blank" rel="noopener"><b>تيليجرام</b><small>@ThewriterMustafa</small></a>
+    <a href="mailto:fdm42143@gmail.com"><b>البريد الإلكتروني</b><small>fdm42143@gmail.com</small></a>
+  </div>
+</section>
+</main>
+<footer><div class="wrap"><strong>رُقيم</strong><p>مجلة شعرية عربية</p></div></footer>
+<script src="poems.js"></script><script src="script.js"></script>
+</body></html>
