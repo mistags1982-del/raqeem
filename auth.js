@@ -1,27 +1,17 @@
-import { initializeApp }
+import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
-
 import {
-
 getAuth,
-
 createUserWithEmailAndPassword,
-
 signInWithEmailAndPassword
-
 }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
-
 import {
-
 getFirestore,
-
 doc,
-
 setDoc
-
 }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
@@ -29,95 +19,125 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
 
-apiKey:"AIzaSyCJklR3ku0zBWSiwgY8eQECt7kJETboA",
+apiKey: "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
 
-authDomain:"raqeem-2ab23.firebaseapp.com",
+authDomain: "raqeem-2ab23.firebaseapp.com",
 
-projectId:"raqeem-2ab23",
+projectId: "raqeem-2ab23",
 
-storageBucket:"raqeem-2ab23.firebasestorage.app",
+storageBucket: "raqeem-2ab23.firebasestorage.app",
 
-messagingSenderId:"404345905166",
+messagingSenderId: "404345905166",
 
-appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
+appId: "1:404345905166:web:3809b83c0e56c1a6781c5f",
+
+measurementId: "G-WLRG1M6HF6"
 
 };
+
 
 
 const app = initializeApp(firebaseConfig);
 
-const auth=getAuth(app);
+const auth = getAuth(app);
 
-const db=getFirestore(app);
-
-
-
-const register=document.getElementById("register");
-
-const login=document.getElementById("login");
-
-const title=document.getElementById("title");
-
-const message=document.getElementById("message");
-
-const switchBtn=document.getElementById("switch");
+const db = getFirestore(app);
 
 
 
-switchBtn.onclick=()=>{
+const registerBox = document.getElementById("register");
+
+const loginBox = document.getElementById("login");
+
+const title = document.getElementById("title");
+
+const switchBtn = document.getElementById("switch");
+
+const message = document.getElementById("message");
 
 
-register.classList.toggle("hidden");
 
-login.classList.toggle("hidden");
+// تبديل تسجيل / دخول
+
+switchBtn.onclick = () => {
+
+registerBox.classList.toggle("hidden");
+
+loginBox.classList.toggle("hidden");
 
 
-if(register.classList.contains("hidden")){
+if(registerBox.classList.contains("hidden")){
 
-title.textContent="تسجيل الدخول";
+title.textContent = "تسجيل الدخول";
 
-switchBtn.textContent="ليس لديك حساب؟ إنشاء حساب";
+switchBtn.textContent = "ليس لديك حساب؟ إنشاء حساب";
 
 }else{
 
-title.textContent="إنشاء حساب";
+title.textContent = "إنشاء حساب";
 
-switchBtn.textContent="لديك حساب؟ تسجيل الدخول";
+switchBtn.textContent = "لديك حساب؟ تسجيل الدخول";
 
 }
-
 
 };
 
 
 
-document.getElementById("registerBtn").onclick=async()=>{
+
+// إنشاء حساب
+
+document.getElementById("registerBtn").onclick = async()=>{
+
+
+const userName =
+document.getElementById("name").value.trim();
+
+
+const userEmail =
+document.getElementById("email").value.trim();
+
+
+const userPassword =
+document.getElementById("password").value;
+
+
+
+if(!userName || !userEmail || !userPassword){
+
+message.textContent = "أكمل جميع الحقول";
+
+return;
+
+}
+
 
 
 try{
 
 
-const userCredential =
+const result =
 await createUserWithEmailAndPassword(
 
 auth,
 
-email.value,
+userEmail,
 
-password.value
+userPassword
 
 );
 
 
+
 await setDoc(
 
-doc(db,"users",userCredential.user.uid),
+doc(db,"users",result.user.uid),
 
 {
 
-name:name.value,
+name:userName,
 
-email:email.value,
+email:userEmail,
 
 createdAt:new Date()
 
@@ -126,7 +146,8 @@ createdAt:new Date()
 );
 
 
-message.textContent="تم إنشاء الحساب";
+
+message.textContent="تم إنشاء الحساب بنجاح";
 
 
 setTimeout(()=>{
@@ -137,9 +158,14 @@ location.href="index.html";
 
 
 
-}catch(e){
+}
 
-message.textContent="حدث خطأ: "+e.message;
+catch(error){
+
+console.error(error);
+
+message.textContent =
+"حدث خطأ: " + error.message;
 
 }
 
@@ -148,7 +174,20 @@ message.textContent="حدث خطأ: "+e.message;
 
 
 
-document.getElementById("loginBtn").onclick=async()=>{
+
+
+// تسجيل الدخول
+
+document.getElementById("loginBtn").onclick = async()=>{
+
+
+const email =
+document.getElementById("loginEmail").value.trim();
+
+
+const password =
+document.getElementById("loginPassword").value;
+
 
 
 try{
@@ -158,19 +197,33 @@ await signInWithEmailAndPassword(
 
 auth,
 
-loginEmail.value,
+email,
 
-loginPassword.value
+password
 
 );
 
 
+
+message.textContent="تم تسجيل الدخول";
+
+
+setTimeout(()=>{
+
 location.href="index.html";
 
+},1000);
 
-}catch(e){
 
-message.textContent="بيانات الدخول غير صحيحة";
+
+}
+
+catch(error){
+
+console.error(error);
+
+message.textContent =
+"الإيميل أو كلمة المرور غير صحيحة";
 
 }
 
