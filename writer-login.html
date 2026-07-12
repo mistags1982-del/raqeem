@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>دخول الكتّاب - رقيم</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:"Noto Sans Arabic",sans-serif;
+background:#f7f7f5;
+}
+
+.box{
+
+width:90%;
+max-width:400px;
+margin:80px auto;
+background:white;
+padding:30px;
+border-radius:20px;
+
+}
+
+input,button{
+
+width:100%;
+padding:14px;
+margin:10px 0;
+border-radius:12px;
+border:1px solid #ddd;
+font-family:inherit;
+
+}
+
+button{
+
+background:#111;
+color:white;
+cursor:pointer;
+
+}
+
+h1{
+text-align:center;
+}
+
+p{
+text-align:center;
+color:#777;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+<h1>
+رقيم
+</h1>
+
+<p>
+دخول الكتّاب
+</p>
+
+
+<input id="email" placeholder="البريد الإلكتروني">
+
+
+<input id="password" type="password" placeholder="كلمة المرور">
+
+
+<button id="register">
+إنشاء حساب
+</button>
+
+
+<button id="login">
+دخول
+</button>
+
+
+<p id="msg"></p>
+
+
+</div>
+
+
+
+
+<script type="module">
+
+
+import {initializeApp}
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+
+
+import {
+
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+
+
+
+const firebaseConfig={
+
+
+apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+authDomain:"raqeem-2ab23.firebaseapp.com",
+
+projectId:"raqeem-2ab23",
+
+storageBucket:"raqeem-2ab23.firebasestorage.app",
+
+messagingSenderId:"404345905166",
+
+appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
+
+
+};
+
+
+
+const app=initializeApp(firebaseConfig);
+
+const auth=getAuth(app);
+
+
+
+const email=document.getElementById("email");
+
+const password=document.getElementById("password");
+
+const msg=document.getElementById("msg");
+
+
+
+
+register.onclick=async()=>{
+
+
+try{
+
+
+await createUserWithEmailAndPassword(
+
+auth,
+
+email.value,
+
+password.value
+
+);
+
+
+msg.innerHTML="تم إنشاء الحساب";
+
+location.href="writer.html";
+
+
+}
+
+catch(e){
+
+msg.innerHTML=e.message;
+
+}
+
+
+};
+
+
+
+
+
+login.onclick=async()=>{
+
+
+try{
+
+
+await signInWithEmailAndPassword(
+
+auth,
+
+email.value,
+
+password.value
+
+);
+
+
+location.href="writer.html";
+
+
+}
+
+catch(e){
+
+msg.innerHTML="بيانات الدخول غير صحيحة";
+
+}
+
+
+};
+
+
+
+</script>
+
+
+</body>
+
+</html>
