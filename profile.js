@@ -26,17 +26,23 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 const firebaseConfig = {
 
-apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+apiKey:
+"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
 
-authDomain:"raqeem-2ab23.firebaseapp.com",
+authDomain:
+"raqeem-2ab23.firebaseapp.com",
 
-projectId:"raqeem-2ab23",
+projectId:
+"raqeem-2ab23",
 
-storageBucket:"raqeem-2ab23.firebasestorage.app",
+storageBucket:
+"raqeem-2ab23.firebasestorage.app",
 
-messagingSenderId:"404345905166",
+messagingSenderId:
+"404345905166",
 
-appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
+appId:
+"1:404345905166:web:3809b83c0e56c1a6781c5f"
 
 };
 
@@ -58,6 +64,7 @@ getFirestore(app);
 
 
 
+
 onAuthStateChanged(auth, async(user)=>{
 
 
@@ -72,14 +79,34 @@ return;
 
 
 
-// بيانات Firebase Auth
+const userRef =
+doc(db,"users",user.uid);
 
-document.getElementById("name").textContent =
 
-user.displayName || "مستخدم رقيم";
 
+const snap =
+await getDoc(userRef);
+
+
+
+let data = {};
+
+
+
+if(snap.exists()){
+
+data = snap.data();
+
+}
+
+
+
+
+// الصورة
 
 document.getElementById("photo").src =
+
+data.photo ||
 
 user.photoURL ||
 
@@ -89,28 +116,37 @@ user.photoURL ||
 
 
 
-// جلب بيانات Firestore
+// الاسم
 
-const userRef =
+document.getElementById("name").textContent =
 
-doc(db,"users",user.uid);
+data.name ||
 
+user.displayName ||
 
-
-const snapshot =
-
-await getDoc(userRef);
+user.email.split("@")[0];
 
 
 
 
-if(snapshot.exists()){
+
+// اليوزر
+
+document.getElementById("username").textContent =
+
+data.username ?
+
+"@" + data.username
+
+:
+
+"@" + user.email.split("@")[0];
 
 
-const data =
-snapshot.data();
 
 
+
+// النبذة
 
 document.getElementById("bio").textContent =
 
@@ -119,6 +155,10 @@ data.bio ||
 "كاتب في رقيم";
 
 
+
+
+
+// الأرقام
 
 document.getElementById("followers").textContent =
 
@@ -135,22 +175,6 @@ data.following || 0;
 document.getElementById("posts").textContent =
 
 data.posts || 0;
-
-
-
-}
-
-else{
-
-
-// إنشاء بيانات أولية
-
-console.log(
-"لا يوجد ملف مستخدم"
-);
-
-
-}
 
 
 
