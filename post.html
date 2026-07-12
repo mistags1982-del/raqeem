@@ -11,19 +11,20 @@
 
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
+
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 
 <style>
 
 @font-face {
 
-  font-family: "PoetryFont";
+  font-family: "AmiriLocal";
 
-  src: url("Arabic%20Poetry%20Font.otf")
-  format("opentype");
+  src: url("alfont_com_Amiri-Regular.ttf")
+  format("truetype");
 
   font-weight: normal;
 
@@ -35,130 +36,128 @@
 
 
 
-*{
+* {
 
- box-sizing:border-box;
-
-}
-
-
-
-body{
-
- margin:0;
-
- background:#f7f7f5;
-
- color:#1c1c1e;
-
- font-family:
- "Noto Sans Arabic",
- sans-serif;
+  box-sizing: border-box;
 
 }
 
 
 
-.page{
+body {
 
- width:min(760px,90%);
+  margin: 0;
 
- margin:auto;
+  background: #f7f7f5;
 
- padding:35px 0 100px;
+  color: #1c1c1e;
 
-}
-
-
-
-.back{
-
- display:inline-block;
-
- margin-bottom:50px;
-
- color:#8e8e93;
-
- text-decoration:none;
-
- font-size:14px;
+  font-family:
+  "Noto Sans Arabic",
+  sans-serif;
 
 }
 
 
 
-article{
+.page {
 
- background:#fff;
+  width: min(760px, 90%);
 
- border-radius:22px;
+  margin: auto;
 
- padding:45px;
-
- box-shadow:
- 0 5px 25px rgba(0,0,0,.04);
+  padding: 35px 0 100px;
 
 }
 
 
 
-.title{
+.back {
 
- margin:0;
+  display: inline-block;
 
- font-size:38px;
+  margin-bottom: 45px;
 
- font-weight:500;
+  color: #8e8e93;
 
- line-height:1.6;
+  text-decoration: none;
 
-}
-
-
-
-.author{
-
- margin-top:12px;
-
- margin-bottom:45px;
-
- color:#8e8e93;
-
- font-size:14px;
+  font-size: 14px;
 
 }
 
 
 
-.content{
+article {
 
+  background: #fff;
 
- font-family:"PoetryFont", serif;
+  border-radius: 22px;
 
+  padding: 45px;
 
- font-size:30px;
-
-
- line-height:2.3;
-
-
- white-space:pre-wrap;
-
-
- color:#111;
-
+  box-shadow:
+  0 5px 25px rgba(0,0,0,.04);
 
 }
 
 
 
-.message{
+.title {
 
- text-align:center;
+  margin: 0;
 
- color:#999;
+  font-size: 40px;
 
- padding:80px 0;
+  font-weight: 700;
+
+  line-height: 1.6;
+
+  letter-spacing: -0.5px;
+
+}
+
+
+
+.author {
+
+  margin-top: 14px;
+
+  margin-bottom: 45px;
+
+  color: #6e6e73;
+
+  font-size: 16px;
+
+  font-weight: 600;
+
+}
+
+
+
+.content {
+
+  font-family: "AmiriLocal", serif;
+
+  font-size: 32px;
+
+  line-height: 2.35;
+
+  white-space: pre-wrap;
+
+  color: #111;
+
+}
+
+
+
+.message {
+
+  text-align: center;
+
+  color: #999;
+
+  padding: 80px 0;
 
 }
 
@@ -167,36 +166,45 @@ article{
 @media(max-width:600px){
 
 
-.page{
+.page {
 
- width:92%;
-
-}
-
-
-article{
-
- padding:30px 22px;
-
- border-radius:18px;
+  width: 92%;
 
 }
 
 
 
-.title{
+article {
 
- font-size:30px;
+  padding: 30px 22px;
+
+  border-radius: 18px;
 
 }
 
 
 
-.content{
+.title {
 
- font-size:25px;
+  font-size: 32px;
 
- line-height:2.2;
+}
+
+
+
+.author {
+
+  font-size: 15px;
+
+}
+
+
+
+.content {
+
+  font-size: 26px;
+
+  line-height: 2.2;
 
 }
 
@@ -220,16 +228,13 @@ article{
 </a>
 
 
-
 <div id="post">
 
 <p class="message">
 جارٍ تحميل النص...
 </p>
 
-
 </div>
-
 
 
 </div>
@@ -275,60 +280,39 @@ appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
 
 
 
-const app=initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
 
 
-const db=getFirestore(app);
+const postBox = document.getElementById("post");
 
 
-
-const box=document.getElementById("post");
-
-
-
-const id=
+const id =
 new URLSearchParams(location.search).get("id");
 
 
 
-function safe(text=""){
+function safe(text="") {
 
 return text
+
 .replace(/&/g,"&amp;")
+
 .replace(/</g,"&lt;")
+
 .replace(/>/g,"&gt;");
 
 }
 
 
 
-async function load(){
+async function loadPost(){
 
 
 if(!id){
 
-box.innerHTML=
-"<p class='message'>لا يوجد نص</p>";
-
-return;
-
-}
-
-
-
-try{
-
-
-const snap=
-await getDoc(
-doc(db,"posts",id)
-);
-
-
-
-if(!snap.exists()){
-
-box.innerHTML=
+postBox.innerHTML =
 "<p class='message'>النص غير موجود</p>";
 
 return;
@@ -337,38 +321,52 @@ return;
 
 
 
-const data=snap.data();
+try {
+
+
+const snap =
+await getDoc(
+doc(db,"posts",id)
+);
 
 
 
-document.title=
-data.title+" | رقيم";
+if(!snap.exists()){
+
+postBox.innerHTML =
+"<p class='message'>النص غير موجود</p>";
+
+return;
+
+}
 
 
 
-box.innerHTML=`
+const data = snap.data();
+
+
+
+document.title =
+(data.title || "رقيم") + " | رقيم";
+
+
+
+postBox.innerHTML = `
 
 <article>
 
-
 <h1 class="title">
-
 ${safe(data.title || "بلا عنوان")}
-
 </h1>
 
 
 <div class="author">
-
 بقلم ${safe(data.author || "رقيم")}
-
 </div>
 
 
 <div class="content">
-
 ${safe(data.content || "")}
-
 </div>
 
 
@@ -380,21 +378,21 @@ ${safe(data.content || "")}
 
 }
 
-catch(e){
+catch(error){
 
-console.log(e);
+console.error(error);
 
-box.innerHTML=
-"<p class='message'>حدث خطأ</p>";
-
-}
-
+postBox.innerHTML =
+"<p class='message'>حدث خطأ أثناء التحميل</p>";
 
 }
 
 
+}
 
-load();
+
+
+loadPost();
 
 
 </script>
