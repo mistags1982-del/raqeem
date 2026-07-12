@@ -3,15 +3,11 @@
 
 <head>
   <meta charset="UTF-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <meta
     name="description"
-    content="رقيم، مساحة للنصوص الشعرية الفصيحة والشعبية"
+    content="رقيم، مساحة عربية للشعر الفصيح والشعبي"
   >
 
   <title>رقيم</title>
@@ -20,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap"
     rel="stylesheet"
   >
 
@@ -29,126 +25,190 @@
 
 <body>
 
-  <header class="header">
+<header class="header">
 
-    <div class="header-inner">
+  <div class="container header-content">
 
-      <a href="index.html" class="logo">
-        رقيم
-      </a>
+    <a class="logo" href="index.html">
+      رقيم
+    </a>
 
-      <nav class="nav">
-        <a href="#texts">النصوص</a>
-        <a href="#about">من نحن</a>
-        <a href="#contact">تواصل معنا</a>
-      </nav>
+    <nav class="nav">
+      <a href="#texts">النصوص</a>
+      <a href="#about">من نحن</a>
+      <a href="#contact">تواصل</a>
+    </nav>
 
-    </div>
+  </div>
 
-  </header>
+</header>
 
 
-  <main>
+<main>
 
-    <section class="hero">
+  <section class="hero">
+
+    <div class="container">
 
       <h1>رقيم</h1>
 
       <p>
-        مساحة هادئة للكلمة والشعر
+        للكلمة مكان
       </p>
 
-    </section>
+    </div>
+
+  </section>
 
 
-    <section class="texts" id="texts">
+  <section class="texts container" id="texts">
 
-      <div class="section-head">
+    <div class="section-header">
 
-        <h2>النصوص</h2>
+      <h2>النصوص</h2>
 
-        <div class="filters">
+      <div class="filters">
 
-          <button
-            class="filter active"
-            data-type="all"
-          >
-            الكل
-          </button>
+        <button
+          class="filter active"
+          data-type="all"
+        >
+          الكل
+        </button>
 
-          <button
-            class="filter"
-            data-type="fusha"
-          >
-            فصيح
-          </button>
+        <button
+          class="filter"
+          data-type="fusha"
+        >
+          فصيح
+        </button>
 
-          <button
-            class="filter"
-            data-type="shaabi"
-          >
-            شعبي
-          </button>
-
-        </div>
+        <button
+          class="filter"
+          data-type="shaabi"
+        >
+          شعبي
+        </button>
 
       </div>
 
+    </div>
 
-      <div id="poemGrid" class="poem-grid">
 
-        <p class="loading">
-          جارٍ تحميل النصوص...
-        </p>
+    <div id="poemGrid" class="poem-grid">
+
+      <p class="loading">
+        جارٍ تحميل النصوص...
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <section class="about" id="about">
+
+    <div class="small-container">
+
+      <span class="section-label">
+        من نحن
+      </span>
+
+      <h2>
+        مساحة للكلمة
+      </h2>
+
+      <p>
+        رقيم مساحة أدبية عربية للنصوص الشعرية
+        الفصيحة والشعبية. نؤمن أن النص لا يحتاج
+        إلى ضجيج، بل إلى مساحة تليق بالكلمة.
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <section class="contact" id="contact">
+
+    <div class="small-container">
+
+      <span class="section-label">
+        تواصل معنا
+      </span>
+
+      <h2>
+        نحن قريبون
+      </h2>
+
+
+      <div class="contact-list">
+
+        <a
+          href="https://t.me/raqeemm"
+          target="_blank"
+          rel="noopener"
+        >
+
+          <span>قناة رقيم</span>
+
+          <small>
+            @raqeemm
+          </small>
+
+        </a>
+
+
+        <a
+          href="https://t.me/ThewriterMustafa"
+          target="_blank"
+          rel="noopener"
+        >
+
+          <span>تيليجرام</span>
+
+          <small>
+            @ThewriterMustafa
+          </small>
+
+        </a>
+
+
+        <a href="mailto:fdm42143@gmail.com">
+
+          <span>البريد الإلكتروني</span>
+
+          <small>
+            fdm42143@gmail.com
+          </small>
+
+        </a>
 
       </div>
 
-    </section>
+    </div>
+
+  </section>
+
+</main>
 
 
-    <section class="simple-section" id="about">
+<footer class="footer">
 
-      <h2>من نحن</h2>
+  <div class="container">
 
-      <p>
-        رقيم مساحة أدبية تهتم بالنصوص الشعرية
-        الفصيحة والشعبية، وتمنح الكلمة مكانًا
-        بسيطًا وهادئًا للقراءة.
-      </p>
-
-    </section>
-
-
-    <section class="simple-section" id="contact">
-
-      <h2>تواصل معنا</h2>
-
-      <p>
-        للتواصل والمقترحات والمشاركة الأدبية.
-      </p>
-
-      <a
-        class="contact-link"
-        href="mailto:fdm42143@gmail.com"
-      >
-        البريد الإلكتروني
-      </a>
-
-    </section>
-
-  </main>
-
-
-  <footer class="footer">
+    <span>رقيم</span>
 
     <p>
-      رقيم © 2026
+      © 2026
     </p>
 
-  </footer>
+  </div>
+
+</footer>
 
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
 
