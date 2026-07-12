@@ -1,20 +1,18 @@
-import { initializeApp } 
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
+.then(async ({ initializeApp }) => {
 
 
-import {
+const {
 
 getFirestore,
 collection,
 getDocs,
 query,
-orderBy,
-addDoc,
-serverTimestamp
+orderBy
 
-}
-
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+} = await import(
+"https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js"
+);
 
 
 
@@ -44,20 +42,6 @@ const db = getFirestore(app);
 
 
 
-// القصائد
-
-const grid = document.getElementById("poemGrid");
-
-const filterButtons = document.querySelectorAll(".filter");
-
-
-let posts = [];
-
-let currentType="all";
-
-
-
-
 function escapeHTML(value=""){
 
 const div=document.createElement("div");
@@ -71,13 +55,38 @@ return div.innerHTML;
 
 
 
+
+
+
+// =================
+// القصائد
+// =================
+
+
+const grid = document.getElementById("poemGrid");
+
+const filterButtons =
+document.querySelectorAll(".filter");
+
+
+let posts=[];
+
+let currentType="all";
+
+
+
+
 function renderPosts(){
+
+
+if(!grid) return;
 
 
 grid.innerHTML="";
 
 
-let filtered =
+
+const filteredPosts =
 currentType==="all"
 ?
 posts
@@ -86,9 +95,10 @@ posts.filter(post=>post.type===currentType);
 
 
 
-if(filtered.length===0){
+if(filteredPosts.length===0){
 
-grid.innerHTML="<p>لا توجد نصوص حالياً</p>";
+grid.innerHTML =
+"<p>لا توجد نصوص في هذا القسم.</p>";
 
 return;
 
@@ -96,14 +106,27 @@ return;
 
 
 
-filtered.forEach(post=>{
+filteredPosts.forEach(post=>{
 
 
-grid.innerHTML += `
+const article=document.createElement("article");
+
+article.className="card";
 
 
-<article class="card">
 
+const content=post.content || "";
+
+const excerpt =
+content.length>150
+?
+content.substring(0,150)+"..."
+:
+content;
+
+
+
+article.innerHTML=`
 
 <div class="card-body">
 
@@ -114,18 +137,12 @@ ${escapeHTML(post.author || "رقيم")}
 
 
 <h3>
-${escapeHTML(post.title)}
+${escapeHTML(post.title || "بلا عنوان")}
 </h3>
 
 
 <p>
-
-${escapeHTML(
-(post.content || "").substring(0,150)
-)}
-
-...
-
+${escapeHTML(excerpt)}
 </p>
 
 
@@ -136,11 +153,11 @@ ${escapeHTML(
 
 </div>
 
-
-</article>
-
-
 `;
+
+
+
+grid.appendChild(article);
 
 
 
@@ -191,7 +208,7 @@ async function loadPosts(){
 try{
 
 
-const q=query(
+const postsQuery=query(
 
 collection(db,"posts"),
 
@@ -201,11 +218,11 @@ orderBy("createdAt","desc")
 
 
 
-const snap=await getDocs(q);
+const snapshot=await getDocs(postsQuery);
 
 
 
-posts=snap.docs.map(doc=>({
+posts=snapshot.docs.map(doc=>({
 
 id:doc.id,
 
@@ -214,17 +231,19 @@ id:doc.id,
 }));
 
 
-
 renderPosts();
 
 
-}
 
-catch(e){
+}catch(error){
 
-console.log(e);
+console.error(error);
 
-grid.innerHTML="تعذر تحميل النصوص";
+
+if(grid)
+
+grid.innerHTML=
+"<p>تعذر تحميل النصوص.</p>";
 
 }
 
@@ -241,10 +260,17 @@ loadPosts();
 
 
 
+
+
+// =================
 // الشعراء
+// =================
 
 
-const poetsGrid=document.getElementById("poetsGrid");
+
+const poetsGrid =
+document.getElementById("poetsGrid");
+
 
 
 
@@ -259,18 +285,22 @@ poetsGrid.innerHTML="";
 
 
 
-const snap=await getDocs(
+try{
 
+
+const snapshot =
+await getDocs(
 collection(db,"poets")
-
 );
 
 
 
-if(snap.empty){
+if(snapshot.empty){
+
 
 poetsGrid.innerHTML=
-"<p>لا يوجد شعراء حالياً</p>";
+"<p>لا يوجد شعراء حالياً.</p>";
+
 
 return;
 
@@ -278,7 +308,8 @@ return;
 
 
 
-snap.forEach(doc=>{
+
+snapshot.forEach(doc=>{
 
 
 const poet=doc.data();
@@ -291,9 +322,12 @@ poetsGrid.innerHTML += `
 <article class="card">
 
 
+<div class="card-body">
+
+
 <h3>
 
-${escapeHTML(poet.name)}
+${escapeHTML(poet.name || "شاعر")}
 
 </h3>
 
@@ -313,9 +347,10 @@ ${escapeHTML(poet.style || "")}
 </a>
 
 
+</div>
+
 
 </article>
-
 
 
 `;
@@ -325,7 +360,22 @@ ${escapeHTML(poet.style || "")}
 });
 
 
+
+}catch(error){
+
+
+console.error(error);
+
+
+poetsGrid.innerHTML=
+"<p>تعذر تحميل الشعراء.</p>";
+
 }
+
+
+
+}
+
 
 
 
@@ -335,116 +385,4 @@ loadPoets();
 
 
 
-
-
-// إرسال القصائد للمراجعة
-
-
-const sendPoem=document.getElementById("sendPoem");
-
-
-
-if(sendPoem){
-
-
-sendPoem.onclick=async()=>{
-
-
-const name=
-document.getElementById("senderName").value.trim();
-
-
-const title=
-document.getElementById("poemTitle").value.trim();
-
-
-const type=
-document.getElementById("poemType").value;
-
-
-const content=
-document.getElementById("poemContent").value.trim();
-
-
-
-const message=
-document.getElementById("sendMessage");
-
-
-
-if(!name || !title || !content){
-
-
-message.innerHTML=
-"أكمل جميع الحقول";
-
-
-return;
-
-}
-
-
-
-
-try{
-
-
-await addDoc(
-
-collection(db,"pendingPosts"),
-
-{
-
-
-author:name,
-
-title:title,
-
-type:type,
-
-content:content,
-
-status:"pending",
-
-createdAt:serverTimestamp()
-
-
-}
-
-);
-
-
-
-message.innerHTML=
-"تم إرسال القصيدة للمراجعة";
-
-
-
-document.getElementById("senderName").value="";
-
-document.getElementById("poemTitle").value="";
-
-document.getElementById("poemContent").value="";
-
-
-
-}
-
-catch(e){
-
-
-console.log(e);
-
-
-message.innerHTML=
-"حدث خطأ أثناء الإرسال";
-
-
-}
-
-
-
-};
-
-
-}
+});
