@@ -2,15 +2,14 @@
 <html lang="ar" dir="rtl">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>رقيم</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link id="canonical" rel="canonical" href="">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -20,8 +19,6 @@
 @font-face {
   font-family: "AmiriLocal";
   src: url("alfont_com_Amiri-Regular.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
   font-display: swap;
 }
 
@@ -62,7 +59,6 @@ article {
   font-size: 40px;
   font-weight: 700;
   line-height: 1.6;
-  letter-spacing: -0.5px;
 }
 
 .author {
@@ -95,13 +91,9 @@ article {
   box-shadow: 0 5px 25px rgba(0,0,0,.04);
 }
 
-.comments h2 {
+.comments-title {
   margin: 0 0 25px;
   font-size: 24px;
-}
-
-.hidden {
-  display: none;
 }
 
 @media(max-width:600px) {
@@ -155,15 +147,7 @@ article {
 
 </div>
 
-<section id="commentsBox" class="comments hidden">
-
-<h2>
-التعليقات
-</h2>
-
-<div id="telegramComments"></div>
-
-</section>
+<div id="comments"></div>
 
 </div>
 
@@ -207,10 +191,7 @@ const postBox =
 document.getElementById("post");
 
 const commentsBox =
-document.getElementById("commentsBox");
-
-const telegramComments =
-document.getElementById("telegramComments");
+document.getElementById("comments");
 
 
 const params =
@@ -218,6 +199,18 @@ new URLSearchParams(window.location.search);
 
 const id =
 params.get("id");
+
+
+const canonicalURL =
+window.location.origin +
+window.location.pathname +
+"?id=" +
+encodeURIComponent(id || "");
+
+
+document
+.getElementById("canonical")
+.setAttribute("href", canonicalURL);
 
 
 function safe(text = "") {
@@ -235,39 +228,54 @@ function safe(text = "") {
 
 function loadComments() {
 
-  commentsBox.classList.remove("hidden");
+  commentsBox.innerHTML = `
 
-  telegramComments.innerHTML = "";
+    <section class="comments">
+
+      <h2 class="comments-title">
+        التعليقات
+      </h2>
+
+      <div id="telegram-comments"></div>
+
+    </section>
+
+  `;
+
+
+  const telegramBox =
+  document.getElementById("telegram-comments");
+
 
   const script =
   document.createElement("script");
 
+
+  script.async = true;
+
   script.src =
   "https://telegram.org/js/telegram-widget.js?22";
 
-  script.async = true;
 
   script.setAttribute(
     "data-telegram-discussion",
     "RaqeemComments"
   );
 
+
   script.setAttribute(
     "data-comments-limit",
     "10"
   );
 
-  script.setAttribute(
-    "data-color",
-    "1c1c1e"
-  );
 
   script.setAttribute(
-    "data-dark-color",
-    "FFFFFF"
+    "data-height",
+    "500"
   );
 
-  telegramComments.appendChild(script);
+
+  telegramBox.appendChild(script);
 
 }
 
@@ -286,11 +294,10 @@ async function loadPost() {
 
   try {
 
-    const postRef =
-    doc(db, "posts", id);
-
     const snap =
-    await getDoc(postRef);
+    await getDoc(
+      doc(db, "posts", id)
+    );
 
 
     if (!snap.exists()) {
@@ -308,7 +315,8 @@ async function loadPost() {
 
 
     document.title =
-    (data.title || "رقيم") + " | رقيم";
+    (data.title || "رقيم") +
+    " | رقيم";
 
 
     postBox.innerHTML = `
@@ -336,10 +344,7 @@ async function loadPost() {
 
   catch (error) {
 
-    console.error(
-      "Raqeem post error:",
-      error
-    );
+    console.error(error);
 
     postBox.innerHTML =
     "<p class='message'>حدث خطأ أثناء تحميل النص</p>";
