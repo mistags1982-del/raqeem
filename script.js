@@ -11,47 +11,68 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
     "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js"
   );
 
+
   const firebaseConfig = {
-    apiKey: "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
-    authDomain: "raqeem-2ab23.firebaseapp.com",
-    projectId: "raqeem-2ab23",
-    storageBucket: "raqeem-2ab23.firebasestorage.app",
-    messagingSenderId: "404345905166",
-    appId: "1:404345905166:web:3809b83c0e56c1a6781c5f"
+
+    apiKey:
+    "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+    authDomain:
+    "raqeem-2ab23.firebaseapp.com",
+
+    projectId:
+    "raqeem-2ab23",
+
+    storageBucket:
+    "raqeem-2ab23.firebasestorage.app",
+
+    messagingSenderId:
+    "404345905166",
+
+    appId:
+    "1:404345905166:web:3809b83c0e56c1a6781c5f"
+
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+
+  const app =
+  initializeApp(firebaseConfig);
+
+  const db =
+  getFirestore(app);
 
 
-  // =========================
-  // حماية النص
-  // =========================
 
   function escapeHTML(value = "") {
-    const div = document.createElement("div");
+
+    const div =
+    document.createElement("div");
+
     div.textContent = value;
+
     return div.innerHTML;
+
   }
 
 
-  // =========================
-  // الهيدر الزجاجي
-  // =========================
 
-  const header = document.getElementById("header");
+  // HEADER
+
+  const header =
+  document.getElementById("header");
+
 
   function updateHeader() {
 
     if (!header) return;
 
-    if (window.scrollY > 25) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
-    }
+    header.classList.toggle(
+      "scrolled",
+      window.scrollY > 20
+    );
 
   }
+
 
   window.addEventListener(
     "scroll",
@@ -59,52 +80,99 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
     { passive: true }
   );
 
+
   updateHeader();
 
 
-  // =========================
-  // حركة ظهور الأقسام
-  // =========================
+
+  // REVEAL
 
   const revealElements =
-    document.querySelectorAll(".reveal");
-
-  const revealObserver =
-    new IntersectionObserver(
-      entries => {
-
-        entries.forEach(entry => {
-
-          if (entry.isIntersecting) {
-
-            entry.target.classList.add("visible");
-
-            revealObserver.unobserve(entry.target);
-
-          }
-
-        });
-
-      },
-      {
-        threshold: 0.12
-      }
-    );
-
-  revealElements.forEach(element => {
-    revealObserver.observe(element);
-  });
+  document.querySelectorAll(".reveal");
 
 
-  // =========================
-  // القصائد
-  // =========================
+  if ("IntersectionObserver" in window) {
+
+    revealElements.forEach(element => {
+
+      element.classList.add(
+        "reveal-ready"
+      );
+
+    });
+
+
+    const observer =
+    new IntersectionObserver(entries => {
+
+      entries.forEach(entry => {
+
+        if (entry.isIntersecting) {
+
+          entry.target.classList.add(
+            "visible"
+          );
+
+          observer.unobserve(
+            entry.target
+          );
+
+        }
+
+      });
+
+    }, {
+
+      threshold: 0.03,
+
+      rootMargin:
+      "0px 0px 80px 0px"
+
+    });
+
+
+    revealElements.forEach(element => {
+
+      observer.observe(element);
+
+    });
+
+
+    setTimeout(() => {
+
+      revealElements.forEach(element => {
+
+        const rect =
+        element.getBoundingClientRect();
+
+        if (
+          rect.top <
+          window.innerHeight
+        ) {
+
+          element.classList.add(
+            "visible"
+          );
+
+        }
+
+      });
+
+    }, 200);
+
+  }
+
+
+
+  // POEMS
 
   const grid =
-    document.getElementById("poemGrid");
+  document.getElementById("poemGrid");
+
 
   const filterButtons =
-    document.querySelectorAll(".filter");
+  document.querySelectorAll(".filter");
+
 
   let posts = [];
 
@@ -115,96 +183,147 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
 
     if (!grid) return;
 
+
     grid.innerHTML = "";
 
-    const filteredPosts =
-      currentType === "all"
-        ? posts
-        : posts.filter(
-            post => post.type === currentType
-          );
 
-    if (filteredPosts.length === 0) {
+    const filteredPosts =
+
+    currentType === "all"
+
+    ? posts
+
+    : posts.filter(
+        post =>
+        post.type === currentType
+      );
+
+
+    if (!filteredPosts.length) {
 
       grid.innerHTML = `
-        <p class="loading">
-          لا توجد نصوص في هذا القسم.
-        </p>
+
+      <p class="loading">
+
+      لا توجد نصوص في هذا القسم.
+
+      </p>
+
       `;
 
       return;
+
     }
 
 
-    filteredPosts.forEach((post, index) => {
-
-      const article =
-        document.createElement("article");
-
-      article.className = "card";
-
-      article.style.opacity = "0";
-
-      article.style.transform =
-        "translateY(25px)";
+    filteredPosts.forEach(
+      (post, index) => {
 
 
-      const content =
+        const article =
+        document.createElement(
+          "article"
+        );
+
+
+        article.className = "card";
+
+
+        const content =
         post.content || "";
 
-      const excerpt =
+
+        const excerpt =
+
         content.length > 150
-          ? content.substring(0, 150) + "..."
-          : content;
+
+        ? content.slice(0, 150) + "..."
+
+        : content;
 
 
-      article.innerHTML = `
+        article.innerHTML = `
 
         <div class="card-body">
 
-          <small>
-            ${escapeHTML(
-              post.author || "رقيم"
-            )}
-          </small>
+        <small>
 
-          <h3>
-            ${escapeHTML(
-              post.title || "بلا عنوان"
-            )}
-          </h3>
+        ${escapeHTML(
+          post.author || "رقيم"
+        )}
 
-          <p>
-            ${escapeHTML(excerpt)}
-          </p>
+        </small>
 
-          <a href="post.html?id=${post.id}">
-            قراءة النص ←
-          </a>
+
+        <h3>
+
+        ${escapeHTML(
+          post.title || "بلا عنوان"
+        )}
+
+        </h3>
+
+
+        <p>
+
+        ${escapeHTML(excerpt)}
+
+        </p>
+
+
+        <a href="post.html?id=${encodeURIComponent(post.id)}">
+
+        قراءة النص ←
+
+        </a>
 
         </div>
 
-      `;
+        `;
 
 
-      grid.appendChild(article);
+        article.animate(
+
+          [
+
+            {
+              opacity: 0,
+              transform:
+              "translateY(20px)"
+            },
+
+            {
+              opacity: 1,
+              transform:
+              "translateY(0)"
+            }
+
+          ],
+
+          {
+
+            duration: 600,
+
+            delay: index * 60,
+
+            fill: "both",
+
+            easing:
+            "cubic-bezier(.2,.8,.2,1)"
+
+          }
+
+        );
 
 
-      setTimeout(() => {
+        grid.appendChild(article);
 
-        article.style.transition =
-          "opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)";
+      }
 
-        article.style.opacity = "1";
-
-        article.style.transform =
-          "translateY(0)";
-
-      }, index * 80);
-
-    });
+    );
 
   }
+
 
 
   filterButtons.forEach(button => {
@@ -213,54 +332,92 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
       "click",
       () => {
 
+
         filterButtons.forEach(btn => {
-          btn.classList.remove("active");
+
+          btn.classList.remove(
+            "active"
+          );
+
         });
 
-        button.classList.add("active");
+
+        button.classList.add(
+          "active"
+        );
+
 
         currentType =
-          button.dataset.type;
+        button.dataset.type;
+
 
         renderPosts();
 
       }
+
     );
 
   });
+
 
 
   async function loadPosts() {
 
     try {
 
-      const postsQuery = query(
+
+      const postsQuery =
+      query(
+
         collection(db, "posts"),
-        orderBy("createdAt", "desc")
+
+        orderBy(
+          "createdAt",
+          "desc"
+        )
+
       );
 
-      const snapshot =
-        await getDocs(postsQuery);
 
-      posts = snapshot.docs.map(
+      const snapshot =
+      await getDocs(postsQuery);
+
+
+      posts =
+      snapshot.docs.map(
         documentSnapshot => ({
-          id: documentSnapshot.id,
+
+          id:
+          documentSnapshot.id,
+
           ...documentSnapshot.data()
+
         })
       );
 
+
       renderPosts();
+
 
     } catch (error) {
 
-      console.error(error);
+
+      console.error(
+        "Posts error:",
+        error
+      );
+
 
       if (grid) {
 
         grid.innerHTML = `
-          <p class="loading">
-            تعذر تحميل النصوص.
-          </p>
+
+        <p class="loading">
+
+        تعذر تحميل النصوص.
+
+        </p>
+
         `;
 
       }
@@ -270,34 +427,44 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
   }
 
 
-  // =========================
-  // الشعراء
-  // =========================
+
+  // POETS
 
   const poetsGrid =
-    document.getElementById("poetsGrid");
+  document.getElementById(
+    "poetsGrid"
+  );
 
 
   async function loadPoets() {
 
     if (!poetsGrid) return;
 
+
     poetsGrid.innerHTML = "";
+
 
     try {
 
+
       const snapshot =
-        await getDocs(
-          collection(db, "poets")
-        );
+      await getDocs(
+
+        collection(db, "poets")
+
+      );
 
 
       if (snapshot.empty) {
 
         poetsGrid.innerHTML = `
-          <p class="loading">
-            لا يوجد شعراء حاليًا.
-          </p>
+
+        <p class="loading">
+
+        لا يوجد شعراء حاليًا.
+
+        </p>
+
         `;
 
         return;
@@ -308,72 +475,117 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
       snapshot.docs.forEach(
         (documentSnapshot, index) => {
 
+
           const poet =
-            documentSnapshot.data();
+          documentSnapshot.data();
+
 
           const article =
-            document.createElement("article");
+          document.createElement(
+            "article"
+          );
 
-          article.className = "poet-card";
 
-          article.style.opacity = "0";
-
-          article.style.transform =
-            "translateY(25px)";
+          article.className =
+          "poet-card";
 
 
           article.innerHTML = `
 
-            <div>
+          <div>
 
-              <h3>
-                ${escapeHTML(
-                  poet.name || "شاعر"
-                )}
-              </h3>
+          <h3>
 
-              <p>
-                ${escapeHTML(
-                  poet.style ||
-                  "صوت شعري في رقيم"
-                )}
-              </p>
+          ${escapeHTML(
+            poet.name || "شاعر"
+          )}
 
-            </div>
+          </h3>
 
-            <a href="poet.html?id=${documentSnapshot.id}">
-              صفحة الشاعر ←
-            </a>
+
+          <p>
+
+          ${escapeHTML(
+            poet.style ||
+            "صوت شعري في رقيم"
+          )}
+
+          </p>
+
+          </div>
+
+
+          <a href="poet.html?id=${encodeURIComponent(documentSnapshot.id)}">
+
+          صفحة الشاعر ←
+
+          </a>
 
           `;
 
 
-          poetsGrid.appendChild(article);
+          article.animate(
+
+            [
+
+              {
+                opacity: 0,
+
+                transform:
+                "translateY(20px)"
+              },
+
+              {
+                opacity: 1,
+
+                transform:
+                "translateY(0)"
+              }
+
+            ],
+
+            {
+
+              duration: 600,
+
+              delay: index * 70,
+
+              fill: "both",
+
+              easing:
+              "cubic-bezier(.2,.8,.2,1)"
+
+            }
+
+          );
 
 
-          setTimeout(() => {
-
-            article.style.transition =
-              "opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)";
-
-            article.style.opacity = "1";
-
-            article.style.transform =
-              "translateY(0)";
-
-          }, index * 90);
+          poetsGrid.appendChild(
+            article
+          );
 
         }
+
       );
+
 
     } catch (error) {
 
-      console.error(error);
+
+      console.error(
+        "Poets error:",
+        error
+      );
+
 
       poetsGrid.innerHTML = `
-        <p class="loading">
-          تعذر تحميل الشعراء.
-        </p>
+
+      <p class="loading">
+
+      تعذر تحميل الشعراء.
+
+      </p>
+
       `;
 
     }
@@ -381,20 +593,21 @@ import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
   }
 
 
-  // =========================
-  // تشغيل الموقع
-  // =========================
 
   await Promise.all([
+
     loadPosts(),
+
     loadPoets()
+
   ]);
+
 
 })
 .catch(error => {
 
   console.error(
-    "Raqeem initialization error:",
+    "Raqeem error:",
     error
   );
 
