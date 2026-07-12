@@ -1,357 +1,576 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>لوحة تحكم رقيم</title>
 
-  <style>
-    *{box-sizing:border-box}
+<meta charset="UTF-8">
 
-    body{
-      margin:0;
-      background:#f7f6f2;
-      color:#1c1c1c;
-      font-family:Tahoma,Arial,sans-serif;
-    }
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    .wrap{
-      width:min(700px,92%);
-      margin:60px auto;
-    }
+<title>إدارة رقيم</title>
 
-    .brand{
-      text-align:center;
-      margin-bottom:35px;
-    }
 
-    .brand h1{
-      font-size:42px;
-      margin:0;
-    }
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-    .brand p{
-      color:#777;
-    }
 
-    .card{
-      background:#fff;
-      border:1px solid #e5e2da;
-      padding:28px;
-      border-radius:14px;
-    }
+<style>
 
-    input,textarea{
-      width:100%;
-      padding:15px;
-      margin-bottom:15px;
-      border:1px solid #ddd;
-      border-radius:8px;
-      font-size:16px;
-      background:#fff;
-    }
+*{
+box-sizing:border-box;
+}
 
-    textarea{
-      min-height:300px;
-      resize:vertical;
-      line-height:2;
-    }
 
-    button{
-      width:100%;
-      padding:14px;
-      border:0;
-      border-radius:8px;
-      background:#191919;
-      color:#fff;
-      font-size:16px;
-      cursor:pointer;
-    }
+body{
 
-    button:disabled{
-      opacity:.5;
-    }
+margin:0;
 
-    .message{
-      text-align:center;
-      margin-top:15px;
-      line-height:1.8;
-    }
+background:#f7f7f5;
 
-    .hidden{
-      display:none;
-    }
+color:#1c1c1e;
 
-    .top{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:20px;
-    }
+font-family:"Noto Sans Arabic",sans-serif;
 
-    .top button{
-      width:auto;
-      background:#eee;
-      color:#222;
-    }
-  </style>
+}
+
+
+
+.wrap{
+
+width:min(700px,92%);
+
+margin:50px auto;
+
+}
+
+
+
+.brand{
+
+text-align:center;
+
+margin-bottom:35px;
+
+}
+
+
+
+.brand h1{
+
+font-size:42px;
+
+margin:0;
+
+font-weight:700;
+
+}
+
+
+
+.brand p{
+
+color:#777;
+
+}
+
+
+
+.card{
+
+background:#fff;
+
+padding:28px;
+
+border-radius:18px;
+
+border:1px solid #eee;
+
+}
+
+
+
+input,
+textarea,
+select{
+
+width:100%;
+
+padding:15px;
+
+margin-bottom:15px;
+
+border:1px solid #ddd;
+
+border-radius:10px;
+
+font-size:16px;
+
+font-family:inherit;
+
+}
+
+
+
+textarea{
+
+min-height:280px;
+
+line-height:2;
+
+resize:vertical;
+
+}
+
+
+
+button{
+
+width:100%;
+
+padding:15px;
+
+border:0;
+
+border-radius:10px;
+
+background:#111;
+
+color:#fff;
+
+font-size:16px;
+
+cursor:pointer;
+
+}
+
+
+
+.hidden{
+
+display:none;
+
+}
+
+
+
+.message{
+
+text-align:center;
+
+margin-top:15px;
+
+color:#666;
+
+}
+
+
+
+.top{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:20px;
+
+}
+
+
+
+.logout{
+
+width:auto;
+
+background:#eee;
+
+color:#111;
+
+padding:10px 15px;
+
+}
+
+
+</style>
+
 </head>
+
 
 <body>
 
+
 <div class="wrap">
 
-  <div class="brand">
-    <h1>رقيم</h1>
-    <p>لوحة إدارة المحتوى</p>
-  </div>
 
-  <div id="loginBox" class="card">
+<div class="brand">
 
-    <input
-      id="email"
-      type="email"
-      placeholder="البريد الإلكتروني"
-    >
+<h1>رقيم</h1>
 
-    <input
-      id="password"
-      type="password"
-      placeholder="كلمة المرور"
-    >
-
-    <button id="loginBtn">دخول</button>
-
-    <p id="loginMessage" class="message"></p>
-
-  </div>
-
-
-  <div id="adminBox" class="card hidden">
-
-    <div class="top">
-      <strong>مقال جديد</strong>
-      <button id="logoutBtn">تسجيل الخروج</button>
-    </div>
-
-    <input
-      id="title"
-      type="text"
-      placeholder="عنوان المقال"
-    >
-
-    <input
-      id="author"
-      type="text"
-      placeholder="اسم الكاتب"
-    >
-
-    <textarea
-      id="content"
-      placeholder="اكتب النص هنا..."
-    ></textarea>
-
-    <button id="publishBtn">نشر المقال</button>
-
-    <p id="publishMessage" class="message"></p>
-
-  </div>
+<p>لوحة إدارة المحتوى</p>
 
 </div>
 
 
+
+<div id="loginBox" class="card">
+
+
+<input id="email" type="email" placeholder="البريد الإلكتروني">
+
+
+<input id="password" type="password" placeholder="كلمة المرور">
+
+
+<button id="loginBtn">
+دخول
+</button>
+
+
+<p id="loginMessage" class="message"></p>
+
+
+</div>
+
+
+
+
+
+<div id="adminBox" class="card hidden">
+
+
+<div class="top">
+
+<strong>
+نشر نص جديد
+</strong>
+
+
+<button id="logoutBtn" class="logout">
+خروج
+</button>
+
+
+</div>
+
+
+
+<input
+id="title"
+type="text"
+placeholder="عنوان القصيدة"
+>
+
+
+
+<input
+id="author"
+type="text"
+placeholder="اسم الكاتب"
+>
+
+
+
+<select id="type">
+
+<option value="fusha">
+فصيح
+</option>
+
+
+<option value="shaabi">
+شعبي
+</option>
+
+</select>
+
+
+
+<textarea
+id="content"
+placeholder="اكتب القصيدة هنا..."
+></textarea>
+
+
+
+<button id="publishBtn">
+نشر
+</button>
+
+
+
+<p id="publishMessage" class="message"></p>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
 <script type="module">
 
+
 import { initializeApp }
+
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged
-}
-from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
 
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp
+
+getAuth,
+
+signInWithEmailAndPassword,
+
+signOut,
+
+onAuthStateChanged
+
 }
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+
+
+import {
+
+getFirestore,
+
+collection,
+
+addDoc,
+
+serverTimestamp
+
+}
+
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
+
+
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
-  authDomain: "raqeem-2ab23.firebaseapp.com",
-  projectId: "raqeem-2ab23",
-  storageBucket: "raqeem-2ab23.firebasestorage.app",
-  messagingSenderId: "404345905166",
-  appId: "1:404345905166:web:3809b83c0e56c1a6781c5f",
-  measurementId: "G-WLRG1M6HF6"
-};
 
 
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const db = getFirestore(app);
+apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
 
 
-const ADMIN_EMAIL = "fdm42143@gmail.com";
+authDomain:"raqeem-2ab23.firebaseapp.com",
 
 
-const loginBox = document.getElementById("loginBox");
-
-const adminBox = document.getElementById("adminBox");
-
-const loginMessage = document.getElementById("loginMessage");
-
-const publishMessage = document.getElementById("publishMessage");
+projectId:"raqeem-2ab23",
 
 
-document.getElementById("loginBtn").onclick = async () => {
+storageBucket:"raqeem-2ab23.firebasestorage.app",
 
-  const email = document.getElementById("email").value.trim();
 
-  const password = document.getElementById("password").value;
+messagingSenderId:"404345905166",
 
-  loginMessage.textContent = "جارٍ تسجيل الدخول...";
 
-  try {
-
-    const result = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
-    if(result.user.email !== ADMIN_EMAIL){
-
-      await signOut(auth);
-
-      loginMessage.textContent = "غير مصرح لك بالدخول";
-
-      return;
-    }
-  
-    loginMessage.textContent = "";
-
-  }
-
-  catch(error){
-
-    console.error(error);
-
-    loginMessage.textContent =
-    "تعذر تسجيل الدخول";
-
-  }
+appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
 
 };
 
 
-document.getElementById("publishBtn").onclick = async () => {
 
-  const title =
-  document.getElementById("title").value.trim();
-
-  const author =
-  document.getElementById("author").value.trim();
-
-  const content =
-  document.getElementById("content").value.trim();
+const app=initializeApp(firebaseConfig);
 
 
-  if(!title || !author || !content){
-
-    publishMessage.textContent =
-    "أكمل جميع الحقول";
-
-    return;
-
-  }
+const auth=getAuth(app);
 
 
-  publishMessage.textContent =
-  "جارٍ النشر...";
+const db=getFirestore(app);
 
 
-  try {
 
-    await addDoc(
-      collection(db,"posts"),
-      {
-
-        title:title,
-
-        author:author,
-
-        content:content,
-
-        createdAt:serverTimestamp()
-
-      }
-    );
+const ADMIN_EMAIL="fdm42143@gmail.com";
 
 
-    document.getElementById("title").value = "";
 
-    document.getElementById("author").value = "";
+const loginBox=document.getElementById("loginBox");
 
-    document.getElementById("content").value = "";
+const adminBox=document.getElementById("adminBox");
 
 
-    publishMessage.textContent =
-    "تم نشر المقال بنجاح";
 
-  }
 
-  catch(error){
 
-    console.error(error);
+loginBtn.onclick=async()=>{
 
-    publishMessage.textContent =
-    "حدث خطأ أثناء النشر";
 
-  }
+const email=
+document.getElementById("email").value.trim();
+
+
+const password=
+document.getElementById("password").value;
+
+
+
+try{
+
+
+await signInWithEmailAndPassword(
+auth,
+email,
+password
+);
+
+
+
+}
+
+catch(e){
+
+loginMessage.textContent=
+"خطأ في تسجيل الدخول";
+
+}
+
 
 };
 
 
-document.getElementById("logoutBtn").onclick = () => {
 
-  signOut(auth);
+
+
+
+publishBtn.onclick=async()=>{
+
+
+const title=
+document.getElementById("title").value.trim();
+
+
+
+const author=
+document.getElementById("author").value.trim();
+
+
+
+const type=
+document.getElementById("type").value;
+
+
+
+const content=
+document.getElementById("content").value.trim();
+
+
+
+if(!title || !author || !content){
+
+publishMessage.textContent=
+"أكمل جميع الحقول";
+
+return;
+
+}
+
+
+
+try{
+
+
+await addDoc(
+collection(db,"posts"),
+
+{
+
+title,
+
+author,
+
+type,
+
+content,
+
+createdAt:serverTimestamp()
+
+}
+
+);
+
+
+
+publishMessage.textContent=
+"تم النشر بنجاح";
+
+
+
+title.value="";
+
+author.value="";
+
+content.value="";
+
+
+
+}
+
+catch(e){
+
+console.log(e);
+
+publishMessage.textContent=
+"حدث خطأ أثناء النشر";
+
+}
+
 
 };
 
 
-onAuthStateChanged(auth,user => {
 
-  if(
-    user &&
-    user.email === ADMIN_EMAIL 
-  ){
 
-    loginBox.classList.add("hidden");
 
-    adminBox.classList.remove("hidden");
+logoutBtn.onclick=()=>{
 
-  }
+signOut(auth);
 
-  else{
+};
 
-    loginBox.classList.remove("hidden");
 
-    adminBox.classList.add("hidden");
 
-  }
+
+
+onAuthStateChanged(auth,user=>{
+
+
+if(user && user.email===ADMIN_EMAIL){
+
+
+loginBox.classList.add("hidden");
+
+
+adminBox.classList.remove("hidden");
+
+
+}
+
+else{
+
+
+loginBox.classList.remove("hidden");
+
+
+adminBox.classList.add("hidden");
+
+
+}
+
 
 });
 
+
+
 </script>
 
+
 </body>
+
 </html>
