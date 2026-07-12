@@ -1,178 +1,260 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
-<head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+import {
 
-<title>حساب رقيم</title>
+getAuth,
 
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+GoogleAuthProvider,
 
-<style>
+signInWithPopup,
 
-body{
-margin:0;
-background:#f5f5f7;
-font-family:"Noto Sans Arabic",sans-serif;
-color:#1d1d1f;
-}
+createUserWithEmailAndPassword,
 
-.box{
-
-width:min(420px,90%);
-margin:80px auto;
-
-background:rgba(255,255,255,.7);
-backdrop-filter:blur(25px);
-
-padding:35px;
-
-border-radius:25px;
-
-box-shadow:0 20px 60px rgba(0,0,0,.08);
+signInWithEmailAndPassword
 
 }
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 
-h1{
-text-align:center;
-margin-bottom:30px;
+
+import {
+
+getFirestore,
+
+doc,
+
+setDoc
+
+}
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+authDomain:"raqeem-2ab23.firebaseapp.com",
+
+projectId:"raqeem-2ab23",
+
+storageBucket:"raqeem-2ab23.firebasestorage.app",
+
+messagingSenderId:"404345905166",
+
+appId:"1:404345905166:web:3809b83c0e56c1a6781c5f",
+
+measurementId:"G-WLRG1M6HF6"
+
+};
+
+
+
+const app=initializeApp(firebaseConfig);
+
+
+const auth=getAuth(app);
+
+const db=getFirestore(app);
+
+
+
+const message=document.getElementById("message");
+
+
+
+// Google Login
+
+document.getElementById("googleBtn").onclick=async()=>{
+
+
+try{
+
+
+const provider=new GoogleAuthProvider();
+
+
+const result=
+await signInWithPopup(auth,provider);
+
+
+
+const user=result.user;
+
+
+
+await setDoc(
+
+doc(db,"users",user.uid),
+
+{
+
+name:user.displayName,
+
+email:user.email,
+
+photo:user.photoURL,
+
+createdAt:new Date()
+
+},
+
+{
+
+merge:true
+
+}
+
+);
+
+
+
+message.textContent="تم الدخول";
+
+
+setTimeout(()=>{
+
+location.href="index.html";
+
+},1000);
+
+
+
+}
+
+catch(e){
+
+console.error(e);
+
+message.textContent=e.message;
+
 }
 
 
-input{
-
-width:100%;
-padding:15px;
-margin-bottom:15px;
-
-border:1px solid #ddd;
-border-radius:15px;
-
-font-family:inherit;
-font-size:15px;
-
-}
+};
 
 
-button{
 
-width:100%;
-padding:15px;
 
-border:0;
-border-radius:15px;
+// تبديل
 
-background:#007aff;
-color:white;
+switch.onclick=()=>{
 
-font-size:16px;
 
-cursor:pointer;
+register.classList.toggle("hidden");
+
+login.classList.toggle("hidden");
+
+
+if(login.classList.contains("hidden")){
+
+title.textContent="إنشاء حساب";
+
+switch.textContent="لديك حساب؟ تسجيل الدخول";
+
+}else{
+
+title.textContent="تسجيل الدخول";
+
+switch.textContent="ليس لديك حساب؟ إنشاء حساب";
 
 }
 
 
-.switch{
+};
 
-text-align:center;
 
-margin-top:20px;
 
-color:#007aff;
 
-cursor:pointer;
+
+// إنشاء بالإيميل
+
+registerBtn.onclick=async()=>{
+
+
+try{
+
+
+const result=
+await createUserWithEmailAndPassword(
+
+auth,
+
+email.value.trim(),
+
+password.value
+
+);
+
+
+
+await setDoc(
+
+doc(db,"users",result.user.uid),
+
+{
+
+name:name.value,
+
+email:email.value,
+
+createdAt:new Date()
+
+}
+
+);
+
+
+
+location.href="index.html";
+
+
+}
+
+catch(e){
+
+message.textContent=e.message;
 
 }
 
 
-.message{
+};
 
-text-align:center;
 
-color:#777;
 
-margin-top:15px;
+
+
+// دخول بالإيميل
+
+loginBtn.onclick=async()=>{
+
+
+try{
+
+
+await signInWithEmailAndPassword(
+
+auth,
+
+loginEmail.value.trim(),
+
+loginPassword.value
+
+);
+
+
+
+location.href="index.html";
+
+
+}
+
+catch(e){
+
+message.textContent=e.message;
 
 }
 
 
-.hidden{
-
-display:none;
-
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<div class="box">
-
-
-<h1 id="title">
-إنشاء حساب
-</h1>
-
-
-
-<div id="register">
-
-
-<input id="name" placeholder="الاسم">
-
-<input id="email" type="email" placeholder="البريد الإلكتروني">
-
-<input id="password" type="password" placeholder="كلمة المرور">
-
-
-<button id="registerBtn">
-إنشاء حساب
-</button>
-
-
-</div>
-
-
-
-<div id="login" class="hidden">
-
-
-<input id="loginEmail" type="email" placeholder="البريد الإلكتروني">
-
-
-<input id="loginPassword" type="password" placeholder="كلمة المرور">
-
-
-<button id="loginBtn">
-تسجيل الدخول
-</button>
-
-
-</div>
-
-
-
-<p class="switch" id="switch">
-لديك حساب؟ تسجيل الدخول
-</p>
-
-
-<p class="message" id="message"></p>
-
-
-</div>
-
-
-
-<script type="module" src="./auth.js"></script>
-
-
-</body>
-
-</html>
+};
