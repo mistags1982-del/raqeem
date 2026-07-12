@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>صفحة الكاتب - رقيم</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+
+
+<style>
+
+body{
+
+margin:0;
+background:#f7f7f5;
+font-family:"Noto Sans Arabic",sans-serif;
+
+}
+
+
+.box{
+
+width:min(700px,90%);
+margin:50px auto;
+background:white;
+padding:30px;
+border-radius:20px;
+
+}
+
+
+input,textarea,button{
+
+width:100%;
+padding:14px;
+margin:10px 0;
+border-radius:12px;
+border:1px solid #ddd;
+font-family:inherit;
+
+}
+
+
+textarea{
+
+height:250px;
+
+}
+
+
+button{
+
+background:#111;
+color:white;
+cursor:pointer;
+
+}
+
+
+.gray{
+
+background:#eee;
+color:#111;
+
+}
+
+
+.message{
+
+text-align:center;
+color:#777;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="box">
+
+
+<h1>
+رقيم
+</h1>
+
+
+<p>
+إرسال قصيدة للمراجعة
+</p>
+
+
+
+<input id="title" placeholder="عنوان القصيدة">
+
+
+<select id="type">
+
+<option value="fusha">
+فصيح
+</option>
+
+<option value="shaabi">
+شعبي
+</option>
+
+</select>
+
+
+
+<textarea id="content" placeholder="اكتب القصيدة"></textarea>
+
+
+
+<button id="send">
+
+إرسال للمراجعة
+
+</button>
+
+
+<button class="gray" id="logout">
+
+تسجيل خروج
+
+</button>
+
+
+
+<p id="msg" class="message"></p>
+
+
+</div>
+
+
+
+
+
+<script type="module">
+
+
+import {initializeApp}
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+
+
+import {
+
+getAuth,
+onAuthStateChanged,
+signOut
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+
+
+import {
+
+getFirestore,
+collection,
+addDoc,
+serverTimestamp
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+
+
+
+const firebaseConfig={
+
+
+apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+authDomain:"raqeem-2ab23.firebaseapp.com",
+
+projectId:"raqeem-2ab23",
+
+storageBucket:"raqeem-2ab23.firebasestorage.app",
+
+messagingSenderId:"404345905166",
+
+appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
+
+
+};
+
+
+
+const app=initializeApp(firebaseConfig);
+
+
+const auth=getAuth(app);
+
+
+const db=getFirestore(app);
+
+
+
+let user=null;
+
+
+
+onAuthStateChanged(auth,u=>{
+
+
+if(!u){
+
+location.href="writer-login.html";
+
+return;
+
+}
+
+
+user=u;
+
+
+});
+
+
+
+
+
+send.onclick=async()=>{
+
+
+if(!user){
+
+return;
+
+}
+
+
+
+if(!title.value || !content.value){
+
+msg.innerHTML="أكمل جميع الحقول";
+
+return;
+
+}
+
+
+
+await addDoc(
+
+collection(db,"pendingPosts"),
+
+{
+
+
+title:title.value,
+
+content:content.value,
+
+author:user.email,
+
+type:type.value,
+
+userId:user.uid,
+
+status:"pending",
+
+createdAt:serverTimestamp()
+
+
+}
+
+);
+
+
+
+msg.innerHTML="تم إرسال القصيدة للمراجعة";
+
+
+title.value="";
+
+content.value="";
+
+
+};
+
+
+
+
+
+logout.onclick=()=>{
+
+
+signOut(auth);
+
+location.href="writer-login.html";
+
+
+};
+
+
+</script>
+
+
+</body>
+
+</html>
