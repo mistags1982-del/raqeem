@@ -1,388 +1,401 @@
 import("https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js")
 .then(async ({ initializeApp }) => {
 
+  const {
+    getFirestore,
+    collection,
+    getDocs,
+    query,
+    orderBy
+  } = await import(
+    "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js"
+  );
 
-const {
+  const firebaseConfig = {
+    apiKey: "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+    authDomain: "raqeem-2ab23.firebaseapp.com",
+    projectId: "raqeem-2ab23",
+    storageBucket: "raqeem-2ab23.firebasestorage.app",
+    messagingSenderId: "404345905166",
+    appId: "1:404345905166:web:3809b83c0e56c1a6781c5f"
+  };
 
-getFirestore,
-collection,
-getDocs,
-query,
-orderBy
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-} = await import(
-"https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js"
-);
 
+  // =========================
+  // حماية النص
+  // =========================
 
+  function escapeHTML(value = "") {
+    const div = document.createElement("div");
+    div.textContent = value;
+    return div.innerHTML;
+  }
 
-const firebaseConfig = {
 
-apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+  // =========================
+  // الهيدر الزجاجي
+  // =========================
 
-authDomain:"raqeem-2ab23.firebaseapp.com",
+  const header = document.getElementById("header");
 
-projectId:"raqeem-2ab23",
+  function updateHeader() {
 
-storageBucket:"raqeem-2ab23.firebasestorage.app",
+    if (!header) return;
 
-messagingSenderId:"404345905166",
+    if (window.scrollY > 25) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
 
-appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
+  }
 
-};
+  window.addEventListener(
+    "scroll",
+    updateHeader,
+    { passive: true }
+  );
 
+  updateHeader();
 
 
-const app = initializeApp(firebaseConfig);
+  // =========================
+  // حركة ظهور الأقسام
+  // =========================
 
-const db = getFirestore(app);
+  const revealElements =
+    document.querySelectorAll(".reveal");
 
+  const revealObserver =
+    new IntersectionObserver(
+      entries => {
 
+        entries.forEach(entry => {
 
+          if (entry.isIntersecting) {
 
+            entry.target.classList.add("visible");
 
-function escapeHTML(value=""){
+            revealObserver.unobserve(entry.target);
 
-const div=document.createElement("div");
+          }
 
-div.textContent=value;
+        });
 
-return div.innerHTML;
+      },
+      {
+        threshold: 0.12
+      }
+    );
 
-}
+  revealElements.forEach(element => {
+    revealObserver.observe(element);
+  });
 
 
+  // =========================
+  // القصائد
+  // =========================
 
+  const grid =
+    document.getElementById("poemGrid");
 
+  const filterButtons =
+    document.querySelectorAll(".filter");
 
+  let posts = [];
 
+  let currentType = "all";
 
-// =================
-// القصائد
-// =================
 
+  function renderPosts() {
 
-const grid = document.getElementById("poemGrid");
+    if (!grid) return;
 
-const filterButtons =
-document.querySelectorAll(".filter");
+    grid.innerHTML = "";
 
+    const filteredPosts =
+      currentType === "all"
+        ? posts
+        : posts.filter(
+            post => post.type === currentType
+          );
 
-let posts=[];
+    if (filteredPosts.length === 0) {
 
-let currentType="all";
+      grid.innerHTML = `
+        <p class="loading">
+          لا توجد نصوص في هذا القسم.
+        </p>
+      `;
 
+      return;
+    }
 
 
+    filteredPosts.forEach((post, index) => {
 
-function renderPosts(){
+      const article =
+        document.createElement("article");
 
+      article.className = "card";
 
-if(!grid) return;
+      article.style.opacity = "0";
 
+      article.style.transform =
+        "translateY(25px)";
 
-grid.innerHTML="";
 
+      const content =
+        post.content || "";
 
+      const excerpt =
+        content.length > 150
+          ? content.substring(0, 150) + "..."
+          : content;
 
-const filteredPosts =
-currentType==="all"
-?
-posts
-:
-posts.filter(post=>post.type===currentType);
 
+      article.innerHTML = `
 
+        <div class="card-body">
 
-if(filteredPosts.length===0){
+          <small>
+            ${escapeHTML(
+              post.author || "رقيم"
+            )}
+          </small>
 
-grid.innerHTML =
-"<p>لا توجد نصوص في هذا القسم.</p>";
+          <h3>
+            ${escapeHTML(
+              post.title || "بلا عنوان"
+            )}
+          </h3>
 
-return;
+          <p>
+            ${escapeHTML(excerpt)}
+          </p>
 
-}
+          <a href="post.html?id=${post.id}">
+            قراءة النص ←
+          </a>
 
+        </div>
 
+      `;
 
-filteredPosts.forEach(post=>{
 
+      grid.appendChild(article);
 
-const article=document.createElement("article");
 
-article.className="card";
+      setTimeout(() => {
 
+        article.style.transition =
+          "opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)";
 
+        article.style.opacity = "1";
 
-const content=post.content || "";
+        article.style.transform =
+          "translateY(0)";
 
-const excerpt =
-content.length>150
-?
-content.substring(0,150)+"..."
-:
-content;
+      }, index * 80);
 
+    });
 
+  }
 
-article.innerHTML=`
 
-<div class="card-body">
+  filterButtons.forEach(button => {
 
+    button.addEventListener(
+      "click",
+      () => {
 
-<small>
-${escapeHTML(post.author || "رقيم")}
-</small>
+        filterButtons.forEach(btn => {
+          btn.classList.remove("active");
+        });
 
+        button.classList.add("active");
 
-<h3>
-${escapeHTML(post.title || "بلا عنوان")}
-</h3>
+        currentType =
+          button.dataset.type;
 
+        renderPosts();
 
-<p>
-${escapeHTML(excerpt)}
-</p>
+      }
+    );
 
+  });
 
-<a href="post.html?id=${post.id}">
-قراءة النص ←
-</a>
 
+  async function loadPosts() {
 
-</div>
+    try {
 
-`;
+      const postsQuery = query(
+        collection(db, "posts"),
+        orderBy("createdAt", "desc")
+      );
 
+      const snapshot =
+        await getDocs(postsQuery);
 
+      posts = snapshot.docs.map(
+        documentSnapshot => ({
+          id: documentSnapshot.id,
+          ...documentSnapshot.data()
+        })
+      );
 
-grid.appendChild(article);
+      renderPosts();
 
+    } catch (error) {
 
+      console.error(error);
 
-});
+      if (grid) {
 
+        grid.innerHTML = `
+          <p class="loading">
+            تعذر تحميل النصوص.
+          </p>
+        `;
 
-}
+      }
 
+    }
 
+  }
 
 
+  // =========================
+  // الشعراء
+  // =========================
 
-filterButtons.forEach(button=>{
+  const poetsGrid =
+    document.getElementById("poetsGrid");
 
 
-button.onclick=()=>{
+  async function loadPoets() {
 
+    if (!poetsGrid) return;
 
-filterButtons.forEach(btn=>{
+    poetsGrid.innerHTML = "";
 
-btn.classList.remove("active");
+    try {
 
-});
+      const snapshot =
+        await getDocs(
+          collection(db, "poets")
+        );
 
 
-button.classList.add("active");
+      if (snapshot.empty) {
 
+        poetsGrid.innerHTML = `
+          <p class="loading">
+            لا يوجد شعراء حاليًا.
+          </p>
+        `;
 
-currentType=button.dataset.type;
+        return;
 
+      }
 
-renderPosts();
 
+      snapshot.docs.forEach(
+        (documentSnapshot, index) => {
 
-};
+          const poet =
+            documentSnapshot.data();
 
+          const article =
+            document.createElement("article");
 
-});
+          article.className = "poet-card";
 
+          article.style.opacity = "0";
 
+          article.style.transform =
+            "translateY(25px)";
 
 
+          article.innerHTML = `
 
+            <div>
 
-async function loadPosts(){
+              <h3>
+                ${escapeHTML(
+                  poet.name || "شاعر"
+                )}
+              </h3>
 
+              <p>
+                ${escapeHTML(
+                  poet.style ||
+                  "صوت شعري في رقيم"
+                )}
+              </p>
 
-try{
+            </div>
 
+            <a href="poet.html?id=${documentSnapshot.id}">
+              صفحة الشاعر ←
+            </a>
 
-const postsQuery=query(
+          `;
 
-collection(db,"posts"),
 
-orderBy("createdAt","desc")
+          poetsGrid.appendChild(article);
 
-);
 
+          setTimeout(() => {
 
+            article.style.transition =
+              "opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1)";
 
-const snapshot=await getDocs(postsQuery);
+            article.style.opacity = "1";
 
+            article.style.transform =
+              "translateY(0)";
 
+          }, index * 90);
 
-posts=snapshot.docs.map(doc=>({
+        }
+      );
 
-id:doc.id,
+    } catch (error) {
 
-...doc.data()
+      console.error(error);
 
-}));
+      poetsGrid.innerHTML = `
+        <p class="loading">
+          تعذر تحميل الشعراء.
+        </p>
+      `;
 
+    }
 
-renderPosts();
+  }
 
 
+  // =========================
+  // تشغيل الموقع
+  // =========================
 
-}catch(error){
+  await Promise.all([
+    loadPosts(),
+    loadPoets()
+  ]);
 
-console.error(error);
+})
+.catch(error => {
 
-
-if(grid)
-
-grid.innerHTML=
-"<p>تعذر تحميل النصوص.</p>";
-
-}
-
-
-}
-
-
-
-loadPosts();
-
-
-
-
-
-
-
-
-
-// =================
-// الشعراء
-// =================
-
-
-
-const poetsGrid =
-document.getElementById("poetsGrid");
-
-
-
-
-async function loadPoets(){
-
-
-if(!poetsGrid) return;
-
-
-
-poetsGrid.innerHTML="";
-
-
-
-try{
-
-
-const snapshot =
-await getDocs(
-collection(db,"poets")
-);
-
-
-
-if(snapshot.empty){
-
-
-poetsGrid.innerHTML=
-"<p>لا يوجد شعراء حالياً.</p>";
-
-
-return;
-
-}
-
-
-
-
-snapshot.forEach(doc=>{
-
-
-const poet=doc.data();
-
-
-
-poetsGrid.innerHTML += `
-
-
-<article class="card">
-
-
-<div class="card-body">
-
-
-<h3>
-
-${escapeHTML(poet.name || "شاعر")}
-
-</h3>
-
-
-<p>
-
-${escapeHTML(poet.style || "")}
-
-</p>
-
-
-
-<a href="poet.html?id=${doc.id}">
-
-صفحة الشاعر ←
-
-</a>
-
-
-</div>
-
-
-</article>
-
-
-`;
-
-
-
-});
-
-
-
-}catch(error){
-
-
-console.error(error);
-
-
-poetsGrid.innerHTML=
-"<p>تعذر تحميل الشعراء.</p>";
-
-}
-
-
-
-}
-
-
-
-
-loadPoets();
-
-
-
-
+  console.error(
+    "Raqeem initialization error:",
+    error
+  );
 
 });
