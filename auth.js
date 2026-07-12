@@ -1,17 +1,13 @@
-import { initializeApp }
+import {initializeApp}
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 
 
 import {
 
 getAuth,
-
 GoogleAuthProvider,
-
 signInWithPopup,
-
 createUserWithEmailAndPassword,
-
 signInWithEmailAndPassword
 
 }
@@ -21,9 +17,7 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
 import {
 
 getFirestore,
-
 doc,
-
 setDoc
 
 }
@@ -31,7 +25,7 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 
 
-const firebaseConfig = {
+const firebaseConfig={
 
 apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
 
@@ -53,35 +47,29 @@ measurementId:"G-WLRG1M6HF6"
 
 const app=initializeApp(firebaseConfig);
 
-
 const auth=getAuth(app);
 
 const db=getFirestore(app);
 
 
 
-const message=document.getElementById("message");
+const msg=document.getElementById("msg");
 
 
 
-// Google Login
+// Google
 
 document.getElementById("googleBtn").onclick=async()=>{
 
-
 try{
 
-
 const provider=new GoogleAuthProvider();
-
 
 const result=
 await signInWithPopup(auth,provider);
 
 
-
 const user=result.user;
-
 
 
 await setDoc(
@@ -89,101 +77,51 @@ await setDoc(
 doc(db,"users",user.uid),
 
 {
-
 name:user.displayName,
-
 email:user.email,
-
 photo:user.photoURL,
-
 createdAt:new Date()
-
 },
 
 {
-
 merge:true
-
 }
 
 );
 
 
-
-message.textContent="تم الدخول";
-
-
-setTimeout(()=>{
-
 location.href="index.html";
 
-},1000);
 
+}catch(e){
 
+console.log(e);
 
-}
-
-catch(e){
-
-console.error(e);
-
-message.textContent=e.message;
+msg.textContent=e.code;
 
 }
-
 
 };
 
 
 
 
-// تبديل
+// إنشاء حساب
 
-switch.onclick=()=>{
-
-
-register.classList.toggle("hidden");
-
-login.classList.toggle("hidden");
-
-
-if(login.classList.contains("hidden")){
-
-title.textContent="إنشاء حساب";
-
-switch.textContent="لديك حساب؟ تسجيل الدخول";
-
-}else{
-
-title.textContent="تسجيل الدخول";
-
-switch.textContent="ليس لديك حساب؟ إنشاء حساب";
-
-}
-
-
-};
-
-
-
-
-
-// إنشاء بالإيميل
-
-registerBtn.onclick=async()=>{
+document.getElementById("registerBtn").onclick=async()=>{
 
 
 try{
 
 
-const result=
+const user =
 await createUserWithEmailAndPassword(
 
 auth,
 
-email.value.trim(),
+document.getElementById("email").value.trim(),
 
-password.value
+document.getElementById("password").value
 
 );
 
@@ -191,13 +129,13 @@ password.value
 
 await setDoc(
 
-doc(db,"users",result.user.uid),
+doc(db,"users",user.user.uid),
 
 {
 
-name:name.value,
+name:document.getElementById("name").value,
 
-email:email.value,
+email:user.user.email,
 
 createdAt:new Date()
 
@@ -206,28 +144,25 @@ createdAt:new Date()
 );
 
 
-
 location.href="index.html";
 
 
+}catch(e){
+
+console.log(e);
+
+msg.textContent=e.code;
+
 }
-
-catch(e){
-
-message.textContent=e.message;
-
-}
-
 
 };
 
 
 
 
+// دخول
 
-// دخول بالإيميل
-
-loginBtn.onclick=async()=>{
+document.getElementById("loginBtn").onclick=async()=>{
 
 
 try{
@@ -244,17 +179,30 @@ loginPassword.value
 );
 
 
-
 location.href="index.html";
 
 
+}catch(e){
+
+console.log(e);
+
+msg.textContent=e.code;
+
 }
 
-catch(e){
+};
 
-message.textContent=e.message;
 
-}
+
+
+// تبديل
+
+document.getElementById("switch").onclick=()=>{
+
+
+register.classList.toggle("hidden");
+
+login.classList.toggle("hidden");
 
 
 };
