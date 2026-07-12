@@ -7,8 +7,6 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link id="canonicalLink" rel="canonical" href="">
-
 <title>رقيم</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -89,9 +87,6 @@ article {
   padding: 80px 0;
 }
 
-
-/* التعليقات */
-
 .comments {
   margin-top: 35px;
   background: #fff;
@@ -100,49 +95,43 @@ article {
   box-shadow: 0 5px 25px rgba(0,0,0,.04);
 }
 
-.comments-title {
+.comments h2 {
   margin: 0 0 25px;
   font-size: 24px;
-  font-weight: 700;
 }
 
-#telegramComments {
-  min-height: 100px;
+.hidden {
+  display: none;
 }
 
+@media(max-width:600px) {
 
-@media(max-width:600px){
+  .page {
+    width: 92%;
+  }
 
-.page {
-  width: 92%;
-}
+  article {
+    padding: 30px 22px;
+    border-radius: 18px;
+  }
 
-article {
-  padding: 30px 22px;
-  border-radius: 18px;
-}
+  .title {
+    font-size: 32px;
+  }
 
-.title {
-  font-size: 32px;
-}
+  .author {
+    font-size: 15px;
+  }
 
-.author {
-  font-size: 15px;
-}
+  .content {
+    font-size: 26px;
+    line-height: 2.2;
+  }
 
-.content {
-  font-size: 26px;
-  line-height: 2.2;
-}
-
-.comments {
-  padding: 25px 18px;
-  border-radius: 18px;
-}
-
-.comments-title {
-  font-size: 21px;
-}
+  .comments {
+    padding: 25px 18px;
+    border-radius: 18px;
+  }
 
 }
 
@@ -150,17 +139,13 @@ article {
 
 </head>
 
-
 <body>
 
-
 <div class="page">
-
 
 <a class="back" href="index.html">
 ← العودة إلى رقيم
 </a>
-
 
 <div id="post">
 
@@ -170,7 +155,204 @@ article {
 
 </div>
 
+<section id="commentsBox" class="comments hidden">
 
-<div id="commentsBox" class="comments" style="display:none;">
+<h2>
+التعليقات
+</h2>
 
-<h
+<div id="telegramComments"></div>
+
+</section>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc
+}
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+  authDomain: "raqeem-2ab23.firebaseapp.com",
+
+  projectId: "raqeem-2ab23",
+
+  storageBucket: "raqeem-2ab23.firebasestorage.app",
+
+  messagingSenderId: "404345905166",
+
+  appId: "1:404345905166:web:3809b83c0e56c1a6781c5f"
+
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+
+const postBox =
+document.getElementById("post");
+
+const commentsBox =
+document.getElementById("commentsBox");
+
+const telegramComments =
+document.getElementById("telegramComments");
+
+
+const params =
+new URLSearchParams(window.location.search);
+
+const id =
+params.get("id");
+
+
+function safe(text = "") {
+
+  const div =
+  document.createElement("div");
+
+  div.textContent =
+  String(text);
+
+  return div.innerHTML;
+
+}
+
+
+function loadComments() {
+
+  commentsBox.classList.remove("hidden");
+
+  telegramComments.innerHTML = "";
+
+  const script =
+  document.createElement("script");
+
+  script.src =
+  "https://telegram.org/js/telegram-widget.js?22";
+
+  script.async = true;
+
+  script.setAttribute(
+    "data-telegram-discussion",
+    "RaqeemComments"
+  );
+
+  script.setAttribute(
+    "data-comments-limit",
+    "10"
+  );
+
+  script.setAttribute(
+    "data-color",
+    "1c1c1e"
+  );
+
+  script.setAttribute(
+    "data-dark-color",
+    "FFFFFF"
+  );
+
+  telegramComments.appendChild(script);
+
+}
+
+
+async function loadPost() {
+
+  if (!id) {
+
+    postBox.innerHTML =
+    "<p class='message'>النص غير موجود</p>";
+
+    return;
+
+  }
+
+
+  try {
+
+    const postRef =
+    doc(db, "posts", id);
+
+    const snap =
+    await getDoc(postRef);
+
+
+    if (!snap.exists()) {
+
+      postBox.innerHTML =
+      "<p class='message'>النص غير موجود</p>";
+
+      return;
+
+    }
+
+
+    const data =
+    snap.data();
+
+
+    document.title =
+    (data.title || "رقيم") + " | رقيم";
+
+
+    postBox.innerHTML = `
+
+      <article>
+
+        <h1 class="title">
+          ${safe(data.title || "بلا عنوان")}
+        </h1>
+
+        <div class="author">
+          بقلم ${safe(data.author || "رقيم")}
+        </div>
+
+        <div class="content">${safe(data.content || "")}</div>
+
+      </article>
+
+    `;
+
+
+    loadComments();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Raqeem post error:",
+      error
+    );
+
+    postBox.innerHTML =
+    "<p class='message'>حدث خطأ أثناء تحميل النص</p>";
+
+  }
+
+}
+
+
+loadPost();
+
+</script>
+
+</body>
+
+</html>
