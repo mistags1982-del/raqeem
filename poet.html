@@ -18,86 +18,65 @@ box-sizing:border-box;
 }
 
 body{
-
 margin:0;
 background:#f7f7f5;
 color:#1c1c1e;
 font-family:"Noto Sans Arabic",sans-serif;
-
 }
-
 
 .container{
-
 width:min(800px,92%);
 margin:40px auto;
-
 }
 
-
 .card{
-
 background:white;
 border:1px solid #eee;
 border-radius:20px;
 padding:25px;
 margin-bottom:20px;
-
 }
 
-
 h1{
-
 text-align:center;
 font-size:38px;
 margin:0;
-
 }
 
-
 .bio{
-
 line-height:2;
 color:#555;
 margin-top:20px;
-
+text-align:center;
 }
-
 
 .poem{
-
 border-top:1px solid #eee;
 padding:20px 0;
-
 }
-
 
 .poem h2{
-
 margin:0 0 10px;
-
 }
-
 
 .meta{
-
 color:#777;
 font-size:14px;
-
 }
 
-
 .content{
-
 white-space:pre-line;
 line-height:2.3;
 margin-top:20px;
-
 }
 
+.message{
+text-align:center;
+color:#999;
+padding:40px;
+}
 
 </style>
-
 
 </head>
 
@@ -110,7 +89,6 @@ margin-top:20px;
 
 <div class="card">
 
-
 <h1 id="poetName">
 الشاعر
 </h1>
@@ -119,7 +97,6 @@ margin-top:20px;
 <p id="poetBio" class="bio">
 
 </p>
-
 
 </div>
 
@@ -136,7 +113,9 @@ margin-top:20px;
 
 <div id="poems">
 
+<p class="message">
 جاري التحميل...
+</p>
 
 </div>
 
@@ -161,6 +140,8 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import {
 
 getFirestore,
+doc,
+getDoc,
 collection,
 getDocs,
 query,
@@ -191,19 +172,27 @@ appId:"1:404345905166:web:3809b83c0e56c1a6781c5f"
 
 
 
-const app=initializeApp(firebaseConfig);
-
-const db=getFirestore(app);
-
+const app =
+initializeApp(firebaseConfig);
 
 
-const name =
-new URLSearchParams(location.search).get("name");
+const db =
+getFirestore(app);
+
+
+
+
+const poetId =
+new URLSearchParams(location.search).get("id");
 
 
 
 const poetName =
 document.getElementById("poetName");
+
+
+const poetBio =
+document.getElementById("poetBio");
 
 
 const poems =
@@ -212,8 +201,71 @@ document.getElementById("poems");
 
 
 
+
+async function loadPoet(){
+
+
+if(!poetId){
+
 poetName.textContent =
-name || "شاعر";
+"لا يوجد شاعر";
+
+return;
+
+}
+
+
+
+try{
+
+
+const snap =
+await getDoc(
+doc(db,"poets",poetId)
+);
+
+
+
+if(!snap.exists()){
+
+
+poetName.textContent =
+"الشاعر غير موجود";
+
+
+return;
+
+}
+
+
+
+const data =
+snap.data();
+
+
+
+poetName.textContent =
+data.name || "شاعر";
+
+
+poetBio.textContent =
+data.bio || "";
+
+
+
+}
+
+catch(error){
+
+console.error(error);
+
+}
+
+
+}
+
+
+
 
 
 
@@ -221,11 +273,27 @@ name || "شاعر";
 async function loadPoems(){
 
 
-const q=query(
+if(!poetId){
+
+return;
+
+}
+
+
+
+try{
+
+
+const q =
+query(
 
 collection(db,"posts"),
 
-where("author","==",name)
+where(
+"poetId",
+"==",
+poetId
+)
 
 );
 
@@ -242,8 +310,15 @@ poems.innerHTML="";
 
 if(snap.empty){
 
-poems.innerHTML=
-"لا توجد قصائد لهذا الشاعر";
+
+poems.innerHTML =
+`
+
+<p class="message">
+لا توجد قصائد لهذا الشاعر
+</p>
+
+`;
 
 return;
 
@@ -251,10 +326,13 @@ return;
 
 
 
-snap.forEach(doc=>{
 
 
-const p=doc.data();
+snap.forEach(item=>{
+
+
+const p =
+item.data();
 
 
 
@@ -265,20 +343,23 @@ poems.innerHTML += `
 
 
 <h2>
-${p.title}
+${p.title || "بلا عنوان"}
 </h2>
 
 
 <div class="meta">
-${p.type==="fusha"?"فصيح":"شعبي"}
+
+${p.type==="fusha" ? "فصيح" : "شعبي"}
+
 </div>
 
 
 
 <div class="content">
-${p.content}
-</div>
 
+${p.content || ""}
+
+</div>
 
 
 </div>
@@ -291,9 +372,33 @@ ${p.content}
 });
 
 
+
+}
+
+catch(error){
+
+
+console.error(error);
+
+
+poems.innerHTML =
+`
+
+<p class="message">
+حدث خطأ في تحميل القصائد
+</p>
+
+`;
+
 }
 
 
+}
+
+
+
+
+loadPoet();
 
 loadPoems();
 
