@@ -7,8 +7,6 @@
 
 <title>رقيم</title>
 
-<link id="canonical" rel="canonical" href="">
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -34,7 +32,7 @@ body {
 }
 
 .page {
-  width: min(760px, 90%);
+  width: min(760px, 92%);
   margin: auto;
   padding: 35px 0 100px;
 }
@@ -92,15 +90,79 @@ article {
 }
 
 .comments-title {
-  margin: 0 0 25px;
-  font-size: 24px;
+  margin: 0 0 30px;
+  font-size: 25px;
+}
+
+.comment-form {
+  margin-bottom: 40px;
+}
+
+.comment-form input,
+.comment-form textarea {
+  width: 100%;
+  border: 1px solid #e5e5e5;
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 15px;
+  margin-bottom: 12px;
+  font-family: "Noto Sans Arabic", sans-serif;
+  font-size: 15px;
+  outline: none;
+}
+
+.comment-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+.comment-form input:focus,
+.comment-form textarea:focus {
+  border-color: #999;
+  background: #fff;
+}
+
+.comment-form button {
+  border: 0;
+  background: #1c1c1e;
+  color: #fff;
+  border-radius: 13px;
+  padding: 13px 25px;
+  font-family: "Noto Sans Arabic", sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#commentMessage {
+  font-size: 13px;
+  color: #777;
+  margin-top: 12px;
+}
+
+.comment {
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+}
+
+.comment-name {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 7px;
+}
+
+.comment-text {
+  font-size: 15px;
+  line-height: 2;
+  white-space: pre-wrap;
+  color: #333;
+}
+
+.empty-comments {
+  color: #999;
+  font-size: 14px;
 }
 
 @media(max-width:600px) {
-
-  .page {
-    width: 92%;
-  }
 
   article {
     padding: 30px 22px;
@@ -111,17 +173,13 @@ article {
     font-size: 32px;
   }
 
-  .author {
-    font-size: 15px;
-  }
-
   .content {
     font-size: 26px;
     line-height: 2.2;
   }
 
   .comments {
-    padding: 25px 18px;
+    padding: 25px 20px;
     border-radius: 18px;
   }
 
@@ -147,7 +205,45 @@ article {
 
 </div>
 
-<div id="comments"></div>
+
+<section class="comments">
+
+<h2 class="comments-title">
+التعليقات
+</h2>
+
+<div class="comment-form">
+
+<input
+id="commentName"
+maxlength="40"
+placeholder="اسمك"
+>
+
+<textarea
+id="commentText"
+maxlength="500"
+placeholder="اكتب تعليقك..."
+></textarea>
+
+<button id="sendComment">
+نشر التعليق
+</button>
+
+<p id="commentMessage"></p>
+
+</div>
+
+
+<div id="commentsList">
+
+<p class="empty-comments">
+جارٍ تحميل التعليقات...
+</p>
+
+</div>
+
+</section>
 
 </div>
 
@@ -160,7 +256,13 @@ from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
 import {
   getFirestore,
   doc,
-  getDoc
+  getDoc,
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  serverTimestamp
 }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
@@ -190,27 +292,26 @@ const db = getFirestore(app);
 const postBox =
 document.getElementById("post");
 
-const commentsBox =
-document.getElementById("comments");
+const commentsList =
+document.getElementById("commentsList");
 
+const commentName =
+document.getElementById("commentName");
 
-const params =
-new URLSearchParams(window.location.search);
+const commentText =
+document.getElementById("commentText");
+
+const sendComment =
+document.getElementById("sendComment");
+
+const commentMessage =
+document.getElementById("commentMessage");
+
 
 const id =
-params.get("id");
-
-
-const canonicalURL =
-window.location.origin +
-window.location.pathname +
-"?id=" +
-encodeURIComponent(id || "");
-
-
-document
-.getElementById("canonical")
-.setAttribute("href", canonicalURL);
+new URLSearchParams(
+window.location.search
+).get("id");
 
 
 function safe(text = "") {
@@ -222,60 +323,6 @@ function safe(text = "") {
   String(text);
 
   return div.innerHTML;
-
-}
-
-
-function loadComments() {
-
-  commentsBox.innerHTML = `
-
-    <section class="comments">
-
-      <h2 class="comments-title">
-        التعليقات
-      </h2>
-
-      <div id="telegram-comments"></div>
-
-    </section>
-
-  `;
-
-
-  const telegramBox =
-  document.getElementById("telegram-comments");
-
-
-  const script =
-  document.createElement("script");
-
-
-  script.async = true;
-
-  script.src =
-  "https://telegram.org/js/telegram-widget.js?22";
-
-
-  script.setAttribute(
-    "data-telegram-discussion",
-    "RaqeemComments"
-  );
-
-
-  script.setAttribute(
-    "data-comments-limit",
-    "10"
-  );
-
-
-  script.setAttribute(
-    "data-height",
-    "500"
-  );
-
-
-  telegramBox.appendChild(script);
 
 }
 
@@ -321,28 +368,25 @@ async function loadPost() {
 
     postBox.innerHTML = `
 
-      <article>
+    <article>
 
-        <h1 class="title">
-          ${safe(data.title || "بلا عنوان")}
-        </h1>
+      <h1 class="title">
+      ${safe(data.title || "بلا عنوان")}
+      </h1>
 
-        <div class="author">
-          بقلم ${safe(data.author || "رقيم")}
-        </div>
+      <div class="author">
+      بقلم ${safe(data.author || "رقيم")}
+      </div>
 
-        <div class="content">${safe(data.content || "")}</div>
+      <div class="content">${safe(data.content || "")}</div>
 
-      </article>
+    </article>
 
     `;
 
-
-    loadComments();
-
   }
 
-  catch (error) {
+  catch(error) {
 
     console.error(error);
 
@@ -354,7 +398,179 @@ async function loadPost() {
 }
 
 
+async function loadComments() {
+
+  if (!id) return;
+
+
+  try {
+
+    const commentsQuery =
+    query(
+      collection(db, "comments"),
+      where("postId", "==", id)
+    );
+
+
+    const snapshot =
+    await getDocs(commentsQuery);
+
+
+    const comments =
+    snapshot.docs.map(item => ({
+      id: item.id,
+      ...item.data()
+    }));
+
+
+    comments.sort((a, b) => {
+
+      const first =
+      a.createdAt?.seconds || 0;
+
+      const second =
+      b.createdAt?.seconds || 0;
+
+      return second - first;
+
+    });
+
+
+    commentsList.innerHTML = "";
+
+
+    if (comments.length === 0) {
+
+      commentsList.innerHTML = `
+      <p class="empty-comments">
+      لا توجد تعليقات بعد.
+      </p>
+      `;
+
+      return;
+
+    }
+
+
+    comments.forEach(comment => {
+
+      const box =
+      document.createElement("div");
+
+      box.className = "comment";
+
+
+      box.innerHTML = `
+
+      <div class="comment-name">
+      ${safe(comment.name || "زائر")}
+      </div>
+
+      <div class="comment-text">${safe(comment.text || "")}</div>
+
+      `;
+
+
+      commentsList.appendChild(box);
+
+    });
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+    commentsList.innerHTML = `
+    <p class="empty-comments">
+    تعذر تحميل التعليقات.
+    </p>
+    `;
+
+  }
+
+}
+
+
+sendComment.addEventListener(
+"click",
+async () => {
+
+
+  const name =
+  commentName.value.trim();
+
+  const text =
+  commentText.value.trim();
+
+
+  if (!name || !text) {
+
+    commentMessage.textContent =
+    "اكتب اسمك وتعليقك.";
+
+    return;
+
+  }
+
+
+  if (name.length > 40 || text.length > 500) {
+
+    commentMessage.textContent =
+    "التعليق طويل جداً.";
+
+    return;
+
+  }
+
+
+  sendComment.disabled = true;
+
+  commentMessage.textContent =
+  "جارٍ نشر التعليق...";
+
+
+  try {
+
+    await addDoc(
+      collection(db, "comments"),
+      {
+        postId: id,
+        name: name,
+        text: text,
+        createdAt: serverTimestamp()
+      }
+    );
+
+
+    commentText.value = "";
+
+    commentMessage.textContent =
+    "تم نشر تعليقك.";
+
+
+    await loadComments();
+
+  }
+
+  catch(error) {
+
+    console.error(error);
+
+    commentMessage.textContent =
+    "تعذر نشر التعليق.";
+
+  }
+
+
+  sendComment.disabled = false;
+
+});
+
+
 loadPost();
+
+loadComments();
 
 </script>
 
