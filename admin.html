@@ -1,1 +1,366 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>لوحة تحكم رقيم</title>
 
+  <style>
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:#f7f6f2;
+      color:#1c1c1c;
+      font-family:Tahoma,Arial,sans-serif;
+    }
+
+    .wrap{
+      width:min(700px,92%);
+      margin:60px auto;
+    }
+
+    .brand{
+      text-align:center;
+      margin-bottom:35px;
+    }
+
+    .brand h1{
+      font-size:42px;
+      margin:0;
+    }
+
+    .brand p{
+      color:#777;
+    }
+
+    .card{
+      background:#fff;
+      border:1px solid #e5e2da;
+      padding:28px;
+      border-radius:14px;
+    }
+
+    input,textarea{
+      width:100%;
+      padding:15px;
+      margin-bottom:15px;
+      border:1px solid #ddd;
+      border-radius:8px;
+      font-size:16px;
+      background:#fff;
+    }
+
+    textarea{
+      min-height:300px;
+      resize:vertical;
+      line-height:2;
+    }
+
+    button{
+      width:100%;
+      padding:14px;
+      border:0;
+      border-radius:8px;
+      background:#191919;
+      color:#fff;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    button:disabled{
+      opacity:.5;
+    }
+
+    .message{
+      text-align:center;
+      margin-top:15px;
+      line-height:1.8;
+    }
+
+    .hidden{
+      display:none;
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .top button{
+      width:auto;
+      background:#eee;
+      color:#222;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div class="brand">
+    <h1>رقيم</h1>
+    <p>لوحة إدارة المحتوى</p>
+  </div>
+
+  <div id="loginBox" class="card">
+
+    <input
+      id="email"
+      type="email"
+      placeholder="البريد الإلكتروني"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="كلمة المرور"
+    >
+
+    <button id="loginBtn">دخول</button>
+
+    <p id="loginMessage" class="message"></p>
+
+  </div>
+
+
+  <div id="adminBox" class="card hidden">
+
+    <div class="top">
+      <strong>مقال جديد</strong>
+      <button id="logoutBtn">تسجيل الخروج</button>
+    </div>
+
+    <input
+      id="title"
+      type="text"
+      placeholder="عنوان المقال"
+    >
+
+    <input
+      id="author"
+      type="text"
+      placeholder="اسم الكاتب"
+    >
+
+    <textarea
+      id="content"
+      placeholder="اكتب النص هنا..."
+    ></textarea>
+
+    <button id="publishBtn">نشر المقال</button>
+
+    <p id="publishMessage" class="message"></p>
+
+  </div>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  serverTimestamp
+}
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+  authDomain: "raqeem-2ab23.firebaseapp.com",
+  projectId: "raqeem-2ab23",
+  storageBucket: "raqeem-2ab23.firebasestorage.app",
+  messagingSenderId: "404345905166",
+  appId: "1:404345905166:web:3809b83c0e56c1a6781c5f",
+  measurementId: "G-WLRG1M6HF6"
+};
+
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+
+const ADMIN_EMAIL = "fdm42143@gmail.com";
+
+
+const loginBox = document.getElementById("loginBox");
+
+const adminBox = document.getElementById("adminBox");
+
+const loginMessage = document.getElementById("loginMessage");
+
+const publishMessage = document.getElementById("publishMessage");
+
+
+document.getElementById("loginBtn").onclick = async () => {
+
+  const email = document.getElementById("email").value.trim();
+
+  const password = document.getElementById("password").value;
+
+  loginMessage.textContent = "جارٍ تسجيل الدخول...";
+
+  try {
+
+    const result = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    if(result.user.email !== ADMIN_EMAIL){
+
+      await signOut(auth);
+
+      loginMessage.textContent = "غير مصرح لك بالدخول";
+
+      return;
+    }
+
+    if(!result.user.emailVerified){
+
+      loginMessage.textContent =
+      "يجب توثيق البريد الإلكتروني أولاً";
+
+      return;
+    }
+
+    loginMessage.textContent = "";
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    loginMessage.textContent =
+    "تعذر تسجيل الدخول";
+
+  }
+
+};
+
+
+document.getElementById("publishBtn").onclick = async () => {
+
+  const title =
+  document.getElementById("title").value.trim();
+
+  const author =
+  document.getElementById("author").value.trim();
+
+  const content =
+  document.getElementById("content").value.trim();
+
+
+  if(!title || !author || !content){
+
+    publishMessage.textContent =
+    "أكمل جميع الحقول";
+
+    return;
+
+  }
+
+
+  publishMessage.textContent =
+  "جارٍ النشر...";
+
+
+  try {
+
+    await addDoc(
+      collection(db,"posts"),
+      {
+
+        title:title,
+
+        author:author,
+
+        content:content,
+
+        createdAt:serverTimestamp()
+
+      }
+    );
+
+
+    document.getElementById("title").value = "";
+
+    document.getElementById("author").value = "";
+
+    document.getElementById("content").value = "";
+
+
+    publishMessage.textContent =
+    "تم نشر المقال بنجاح";
+
+  }
+
+  catch(error){
+
+    console.error(error);
+
+    publishMessage.textContent =
+    "حدث خطأ أثناء النشر";
+
+  }
+
+};
+
+
+document.getElementById("logoutBtn").onclick = () => {
+
+  signOut(auth);
+
+};
+
+
+onAuthStateChanged(auth,user => {
+
+  if(
+    user &&
+    user.email === ADMIN_EMAIL &&
+    user.emailVerified
+  ){
+
+    loginBox.classList.add("hidden");
+
+    adminBox.classList.remove("hidden");
+
+  }
+
+  else{
+
+    loginBox.classList.remove("hidden");
+
+    adminBox.classList.add("hidden");
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
