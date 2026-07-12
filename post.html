@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -17,6 +18,8 @@
 @font-face {
   font-family: "AmiriLocal";
   src: url("alfont_com_Amiri-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -29,6 +32,12 @@ body {
   background: #f7f7f5;
   color: #1c1c1e;
   font-family: "Noto Sans Arabic", sans-serif;
+}
+
+button,
+input,
+textarea {
+  font-family: inherit;
 }
 
 .page {
@@ -57,13 +66,14 @@ article {
   font-size: 40px;
   font-weight: 700;
   line-height: 1.6;
+  letter-spacing: -.5px;
 }
 
 .author {
   margin-top: 14px;
   margin-bottom: 45px;
-  color: #6e6e73;
-  font-size: 16px;
+  color: #555;
+  font-size: 17px;
   font-weight: 600;
 }
 
@@ -73,6 +83,43 @@ article {
   line-height: 2.35;
   white-space: pre-wrap;
   color: #111;
+}
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 45px;
+  padding-top: 22px;
+  border-top: 1px solid #eee;
+}
+
+.stat-box {
+  background: #f7f7f5;
+  border-radius: 12px;
+  padding: 10px 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+.like-button {
+  border: 0;
+  background: #f7f7f5;
+  border-radius: 12px;
+  padding: 10px 15px;
+  color: #555;
+  font-size: 14px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.like-button:hover {
+  background: #eee;
+}
+
+.like-button.liked {
+  background: #111;
+  color: #fff;
 }
 
 .message {
@@ -106,7 +153,6 @@ article {
   border-radius: 14px;
   padding: 15px;
   margin-bottom: 12px;
-  font-family: "Noto Sans Arabic", sans-serif;
   font-size: 15px;
   outline: none;
 }
@@ -118,8 +164,8 @@ article {
 
 .comment-form input:focus,
 .comment-form textarea:focus {
-  border-color: #999;
   background: #fff;
+  border-color: #999;
 }
 
 .comment-form button {
@@ -128,9 +174,14 @@ article {
   color: #fff;
   border-radius: 13px;
   padding: 13px 25px;
-  font-family: "Noto Sans Arabic", sans-serif;
   font-size: 14px;
   cursor: pointer;
+}
+
+.comment-form button:disabled,
+.like-button:disabled {
+  opacity: .55;
+  cursor: default;
 }
 
 #commentMessage {
@@ -173,9 +224,17 @@ article {
     font-size: 32px;
   }
 
+  .author {
+    font-size: 16px;
+  }
+
   .content {
     font-size: 26px;
     line-height: 2.2;
+  }
+
+  .post-actions {
+    flex-wrap: wrap;
   }
 
   .comments {
@@ -234,7 +293,6 @@ placeholder="اكتب تعليقك..."
 
 </div>
 
-
 <div id="commentsList">
 
 <p class="empty-comments">
@@ -262,7 +320,9 @@ import {
   getDocs,
   query,
   where,
-  serverTimestamp
+  serverTimestamp,
+  updateDoc,
+  increment
 }
 from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
@@ -314,6 +374,10 @@ window.location.search
 ).get("id");
 
 
+const postRef =
+id ? doc(db, "posts", id) : null;
+
+
 function safe(text = "") {
 
   const div =
@@ -323,6 +387,57 @@ function safe(text = "") {
   String(text);
 
   return div.innerHTML;
+
+}
+
+
+function likedKey() {
+
+  return "raqeem-liked-" + id;
+
+}
+
+
+async function increaseView() {
+
+  const viewKey =
+  "raqeem-viewed-" + id;
+
+
+  if (
+    sessionStorage.getItem(viewKey)
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    await updateDoc(
+      postRef,
+      {
+        views: increment(1)
+      }
+    );
+
+
+    sessionStorage.setItem(
+      viewKey,
+      "1"
+    );
+
+  }
+
+  catch(error) {
+
+    console.error(
+      "View error:",
+      error
+    );
+
+  }
 
 }
 
@@ -341,10 +456,11 @@ async function loadPost() {
 
   try {
 
+    await increaseView();
+
+
     const snap =
-    await getDoc(
-      doc(db, "posts", id)
-    );
+    await getDoc(postRef);
 
 
     if (!snap.exists()) {
@@ -361,6 +477,12 @@ async function loadPost() {
     snap.data();
 
 
+    const liked =
+    localStorage.getItem(
+      likedKey()
+    ) === "1";
+
+
     document.title =
     (data.title || "رقيم") +
     " | رقيم";
@@ -374,15 +496,55 @@ async function loadPost() {
       ${safe(data.title || "بلا عنوان")}
       </h1>
 
+
       <div class="author">
       بقلم ${safe(data.author || "رقيم")}
       </div>
 
+
       <div class="content">${safe(data.content || "")}</div>
+
+
+      <div class="post-actions">
+
+        <div class="stat-box">
+        المشاهدات:
+        <span id="viewsCount">
+        ${data.views || 0}
+        </span>
+        </div>
+
+
+        <button
+        id="likeButton"
+        class="like-button ${liked ? "liked" : ""}"
+        >
+
+        ${liked ? "أعجبني" : "إعجاب"}
+
+        ·
+
+        <span id="likesCount">
+        ${data.likes || 0}
+        </span>
+
+        </button>
+
+      </div>
 
     </article>
 
     `;
+
+
+    const likeButton =
+    document.getElementById(
+      "likeButton"
+    );
+
+
+    likeButton.onclick =
+    handleLike;
 
   }
 
@@ -394,6 +556,82 @@ async function loadPost() {
     "<p class='message'>حدث خطأ أثناء تحميل النص</p>";
 
   }
+
+}
+
+
+async function handleLike() {
+
+  const likeButton =
+  document.getElementById(
+    "likeButton"
+  );
+
+
+  const likesCount =
+  document.getElementById(
+    "likesCount"
+  );
+
+
+  if (
+    localStorage.getItem(
+      likedKey()
+    ) === "1"
+  ) {
+
+    return;
+
+  }
+
+
+  likeButton.disabled = true;
+
+
+  try {
+
+    await updateDoc(
+      postRef,
+      {
+        likes: increment(1)
+      }
+    );
+
+
+    localStorage.setItem(
+      likedKey(),
+      "1"
+    );
+
+
+    likesCount.textContent =
+    Number(
+      likesCount.textContent
+    ) + 1;
+
+
+    likeButton.classList.add(
+      "liked"
+    );
+
+
+    likeButton.childNodes[0].textContent =
+    " أعجبني ";
+
+
+  }
+
+  catch(error) {
+
+    console.error(
+      "Like error:",
+      error
+    );
+
+  }
+
+
+  likeButton.disabled = false;
 
 }
 
@@ -418,8 +656,11 @@ async function loadComments() {
 
     const comments =
     snapshot.docs.map(item => ({
+
       id: item.id,
+
       ...item.data()
+
     }));
 
 
@@ -439,12 +680,16 @@ async function loadComments() {
     commentsList.innerHTML = "";
 
 
-    if (comments.length === 0) {
+    if (
+      comments.length === 0
+    ) {
 
       commentsList.innerHTML = `
+
       <p class="empty-comments">
       لا توجد تعليقات بعد.
       </p>
+
       `;
 
       return;
@@ -457,7 +702,9 @@ async function loadComments() {
       const box =
       document.createElement("div");
 
-      box.className = "comment";
+
+      box.className =
+      "comment";
 
 
       box.innerHTML = `
@@ -471,7 +718,9 @@ async function loadComments() {
       `;
 
 
-      commentsList.appendChild(box);
+      commentsList.appendChild(
+        box
+      );
 
     });
 
@@ -481,10 +730,13 @@ async function loadComments() {
 
     console.error(error);
 
+
     commentsList.innerHTML = `
+
     <p class="empty-comments">
     تعذر تحميل التعليقات.
     </p>
+
     `;
 
   }
@@ -492,13 +744,12 @@ async function loadComments() {
 }
 
 
-sendComment.addEventListener(
-"click",
-async () => {
+sendComment.onclick = async()=>{
 
 
   const name =
   commentName.value.trim();
+
 
   const text =
   commentText.value.trim();
@@ -514,17 +765,8 @@ async () => {
   }
 
 
-  if (name.length > 40 || text.length > 500) {
-
-    commentMessage.textContent =
-    "التعليق طويل جداً.";
-
-    return;
-
-  }
-
-
   sendComment.disabled = true;
+
 
   commentMessage.textContent =
   "جارٍ نشر التعليق...";
@@ -533,17 +775,26 @@ async () => {
   try {
 
     await addDoc(
+
       collection(db, "comments"),
+
       {
+
         postId: id,
+
         name: name,
+
         text: text,
+
         createdAt: serverTimestamp()
+
       }
+
     );
 
 
     commentText.value = "";
+
 
     commentMessage.textContent =
     "تم نشر تعليقك.";
@@ -557,6 +808,7 @@ async () => {
 
     console.error(error);
 
+
     commentMessage.textContent =
     "تعذر نشر التعليق.";
 
@@ -565,7 +817,7 @@ async () => {
 
   sendComment.disabled = false;
 
-});
+};
 
 
 loadPost();
