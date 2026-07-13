@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="theme-color" content="#f7f7f5">
+
+<title>أقلام رقيم</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap"
+rel="stylesheet"
+>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+background:#f7f7f5;
+color:#1c1c1e;
+font-family:"Noto Sans Arabic",sans-serif;
+}
+
+a{
+color:inherit;
+text-decoration:none;
+}
+
+button,
+input{
+font-family:inherit;
+}
+
+.page{
+width:min(1000px,92%);
+margin:auto;
+padding:30px 0 100px;
+}
+
+.top{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:20px;
+margin-bottom:50px;
+}
+
+.back{
+font-size:14px;
+color:#777;
+}
+
+.write{
+background:#111;
+color:#fff;
+padding:11px 20px;
+border-radius:13px;
+font-size:14px;
+}
+
+.hero{
+margin-bottom:50px;
+}
+
+.label{
+color:#999;
+font-size:13px;
+margin-bottom:8px;
+}
+
+.hero h1{
+font-size:46px;
+margin:0;
+letter-spacing:-1px;
+}
+
+.hero p{
+color:#666;
+line-height:2;
+max-width:550px;
+}
+
+.search{
+margin-bottom:35px;
+}
+
+.search input{
+width:100%;
+border:1px solid #e5e5e5;
+background:#fff;
+border-radius:16px;
+padding:16px 18px;
+font-size:15px;
+outline:none;
+}
+
+.search input:focus{
+border-color:#aaa;
+}
+
+.writers-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+}
+
+.writer{
+background:#fff;
+border:1px solid #eee;
+border-radius:20px;
+padding:25px;
+transition:.25s;
+}
+
+.writer:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 30px rgba(0,0,0,.05);
+}
+
+.writer-top{
+display:flex;
+align-items:center;
+gap:15px;
+margin-bottom:20px;
+}
+
+.avatar{
+width:58px;
+height:58px;
+border-radius:50%;
+object-fit:cover;
+background:#eee;
+}
+
+.avatar-letter{
+width:58px;
+height:58px;
+border-radius:50%;
+background:#111;
+color:#fff;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:22px;
+font-weight:700;
+flex-shrink:0;
+}
+
+.writer-name{
+font-size:18px;
+font-weight:700;
+}
+
+.verified{
+font-size:12px;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+width:18px;
+height:18px;
+border-radius:50%;
+background:#111;
+color:#fff;
+margin-right:5px;
+}
+
+.bio{
+font-size:14px;
+color:#666;
+line-height:1.9;
+min-height:55px;
+}
+
+.stats{
+display:flex;
+gap:18px;
+margin-top:20px;
+padding-top:17px;
+border-top:1px solid #eee;
+font-size:13px;
+color:#777;
+}
+
+.stats strong{
+color:#111;
+}
+
+.message{
+text-align:center;
+color:#999;
+padding:70px 0;
+grid-column:1/-1;
+}
+
+@media(max-width:800px){
+
+.writers-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
+}
+
+@media(max-width:600px){
+
+.page{
+width:91%;
+padding-top:20px;
+}
+
+.hero h1{
+font-size:38px;
+}
+
+.writers-grid{
+grid-template-columns:1fr;
+}
+
+.writer{
+border-radius:18px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<div class="page">
+
+
+<div class="top">
+
+<a href="index.html" class="back">
+← العودة إلى رقيم
+</a>
+
+<a href="write.html" class="write">
+اكتب
+</a>
+
+</div>
+
+
+
+<section class="hero">
+
+<div class="label">
+أصوات جديدة
+</div>
+
+<h1>
+أقلام رقيم
+</h1>
+
+<p>
+مساحة للكتّاب والشعراء الجدد،
+حيث تجد الكلمات التي ما زالت تصنع طريقها.
+</p>
+
+</section>
+
+
+
+<div class="search">
+
+<input
+id="searchInput"
+type="search"
+placeholder="ابحث عن كاتب..."
+>
+
+</div>
+
+
+
+<div
+id="writersGrid"
+class="writers-grid"
+>
+
+<p class="message">
+جارٍ تحميل الأقلام...
+</p>
+
+</div>
+
+
+</div>
+
+
+
+<script type="module">
+
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+
+import {
+getFirestore,
+collection,
+getDocs,
+query,
+where
+}
+from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+
+const firebaseConfig={
+
+apiKey:"AIzaSyCJ01klR3ku0zBWSiwgY8eQECt7kJETboA",
+
+authDomain:"raqeem-2ab23.firebaseapp.com",
+
+projectId:"raqeem-2ab23",
+
+storageBucket:"raqeem-2ab23.firebasestorage.app",
+
+messagingSenderId:"404345905166",
+
+appId:"1:404345905166:web:3809b83c0e56c1a6781c5f",
+
+measurementId:"G-WLRG1M6HF6"
+
+};
+
+
+
+const app=
+initializeApp(firebaseConfig);
+
+
+const db=
+getFirestore(app);
+
+
+
+const writersGrid=
+document.getElementById("writersGrid");
+
+
+const searchInput=
+document.getElementById("searchInput");
+
+
+let writers=[];
+
+
+
+function safe(text=""){
+
+const div=
+document.createElement("div");
+
+div.textContent=
+String(text);
+
+return div.innerHTML;
+
+}
+
+
+
+function getLetter(name="ر"){
+
+return String(name)
+.trim()
+.charAt(0) || "ر";
+
+}
+
+
+
+function renderWriters(list){
+
+
+writersGrid.innerHTML="";
+
+
+if(list.length===0){
+
+writersGrid.innerHTML=`
+
+<p class="message">
+لا توجد أقلام حالياً.
+</p>
+
+`;
+
+return;
+
+}
+
+
+
+list.forEach(writer=>{
+
+
+const card=
+document.createElement("a");
+
+
+card.className=
+"writer";
+
+
+card.href=
+"user.html?id="+encodeURIComponent(writer.id);
+
+
+
+const avatar=
+writer.photo
+
+?
+
+`
+
+<img
+class="avatar"
+src="${safe(writer.photo)}"
+alt="${safe(writer.name || "كاتب")}"
+>
+
+`
+
+:
+
+`
+
+<div class="avatar-letter">
+${safe(getLetter(writer.name))}
+</div>
+
+`;
+
+
+
+card.innerHTML=`
+
+<div class="writer-top">
+
+${avatar}
+
+<div>
+
+<div class="writer-name">
+
+${safe(writer.name || "كاتب")}
+
+${writer.verified === true
+
+?
+
+`<span class="verified">✓</span>`
+
+:
+
+""
+
+}
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="bio">
+
+${safe(
+writer.bio ||
+"كاتب في رقيم."
+)}
+
+</div>
+
+
+<div class="stats">
+
+<span>
+
+<strong>
+${writer.postsCount || 0}
+</strong>
+
+نص
+
+</span>
+
+
+<span>
+
+<strong>
+${writer.followersCount || 0}
+</strong>
+
+متابع
+
+</span>
+
+</div>
+
+`;
+
+
+writersGrid.appendChild(card);
+
+
+});
+
+
+}
+
+
+
+async function loadWriters(){
+
+
+try{
+
+
+const snap=
+await getDocs(
+collection(db,"users")
+);
+
+
+
+writers=
+snap.docs.map(item=>({
+
+id:item.id,
+
+...item.data()
+
+}));
+
+
+
+writers.sort((a,b)=>{
+
+const first=
+a.createdAt?.seconds || 0;
+
+const second=
+b.createdAt?.seconds || 0;
+
+return second-first;
+
+});
+
+
+
+renderWriters(writers);
+
+
+}
+
+catch(error){
+
+
+console.error(error);
+
+
+writersGrid.innerHTML=`
+
+<p class="message">
+تعذر تحميل أقلام رقيم.
+</p>
+
+`;
+
+
+}
+
+
+}
+
+
+
+searchInput.addEventListener(
+"input",
+()=>{
+
+
+const word=
+searchInput.value
+.trim()
+.toLowerCase();
+
+
+
+if(!word){
+
+renderWriters(writers);
+
+return;
+
+}
+
+
+
+const result=
+writers.filter(writer=>{
+
+
+const name=
+String(writer.name || "")
+.toLowerCase();
+
+
+return name.includes(word);
+
+
+});
+
+
+renderWriters(result);
+
+
+}
+);
+
+
+
+loadWriters();
+
+
+</script>
+
+
+</body>
+
+</html>
